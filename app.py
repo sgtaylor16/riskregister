@@ -15,34 +15,22 @@ engine = create_engine('sqlite:///dbcode/riskregister.db')
 Session = sessionmaker(bind=engine)
 session = Session()
 risks = session.query(Risks).all()
+print(risks)
 
+risklist = []
 for risk in risks:
     tempfig = addcube(275,risk.probability,risk.impact)
-    newlist = []
-    newlist.append(html.P(risk.ifstatement))
-    newlist.append(html.P(risk.thenstatement))
-    newlist.append(html.P("Mitigations"))
-    newlist.append(dcc.Graph(figure=tempfig))
+    risklist.append(html.P(risk.ifstatement))
+    risklist.append(html.P(risk.thenstatement))
+    risklist.append(html.P("Mitigations"))
+    risklist.append(dcc.Graph(figure=tempfig))
 
 app = Dash()
 
-fig1 = addcube(275,3,3)
-fig2 = addcube(275,1,1)
 
 app.layout = html.Div(children = [
     html.H1("Risk Register"),
-    html.Div(className="grid-container", children=[
-        html.P("My First Risk"),
-        html.P("Then Statement"),
-        html.P("Mitigations"),
-        html.Div(dcc.Graph(figure=fig1))
-    ]),
-    html.Div(className="grid-container", children=[
-        html.P("My Second Risk"),
-        html.P("Then Statement"),
-        html.P("Mitigations"),
-        dcc.Graph(figure=fig2)
-    ])
+    html.Div(className="grid-container", children=risklist)
 ])
 
 if __name__ == "__main__":
