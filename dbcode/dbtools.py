@@ -36,6 +36,7 @@ class Mitigations(Base):
     risk_id: Mapped[int] = mapped_column(ForeignKey('risks.id'))
     risk: Mapped['Risks'] = relationship(back_populates="mitigations")
     date: Mapped[datetime] = mapped_column(DateTime)
+    complete: Mapped[bool] = mapped_column(default=False)
 
 
 from sqlalchemy import create_engine
@@ -67,7 +68,7 @@ def populatedb():
     session.commit()
 
     mitigation1 = Mitigations(description='Mitigation 1', probability=1, impact=3, risk=risk1, date=datetime.now())
-    mitigation2 = Mitigations(description='Mitigation 2', probability=2, impact=4, risk=risk1, date=datetime.now())
+    mitigation2 = Mitigations(description='Mitigation 2', probability=2, impact=4, risk=risk1, date=datetime.now(),complete=True)
     mitigation3 = Mitigations(description='Mitigation 3', probability=5, impact=5, risk=risk2, date=datetime.now())
     session.add(mitigation1)
     session.add(mitigation2)
