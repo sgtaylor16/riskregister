@@ -2,7 +2,7 @@ from dash import Dash, html, dcc
 from plotlytools import addcube
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from dbcode.dbtools import Risks, Persons, Mitigations
+from dbcode.models import Risks, Persons, Mitigations
 from flask import Flask, render_template
 
 
@@ -20,7 +20,7 @@ risks = session.query(Risks).all()
 risklist = []
 for risk in risks:
     tempfig = addcube(275,risk.probability,risk.impact)
-    risklist.append(html.P(risk.id))
+    risklist.append(html.A(risk.id,href=f'/editrisk/{risk.id}'))
     risklist.append(html.P(risk.ifstatement))
     risklist.append(html.P(risk.thenstatement))
     #Mitigations
@@ -47,10 +47,7 @@ dash_app.layout = html.Div(children = [
     html.H1("Risk Register"),
     html.Div(className="grid-container", children=risklist)
 ])
-'''
-if __name__ == "__main__":
-    app.run(debug=True)
-'''
+
 
 @flask_app.route('/')
 def home():
