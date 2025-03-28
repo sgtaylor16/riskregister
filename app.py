@@ -15,11 +15,11 @@ engine = create_engine('sqlite:///dbcode/riskregister.db')
 Session = sessionmaker(bind=engine)
 session = Session()
 risks = session.query(Risks).all()
-print(risks)
 
 risklist = []
 for risk in risks:
     tempfig = addcube(275,risk.probability,risk.impact)
+    risklist.append(html.P(risk.id))
     risklist.append(html.P(risk.ifstatement))
     risklist.append(html.P(risk.thenstatement))
     risklist.append(html.P("Mitigations"))
