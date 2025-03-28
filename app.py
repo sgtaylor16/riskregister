@@ -3,6 +3,7 @@ from plotlytools import addcube
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from dbcode.dbtools import Risks, Persons, Mitigations
+from flask import Flask, render_template
 
 
 def create_risk_row(ifstatement:str,riskstatement:str,prob:int,impact:int):
@@ -28,20 +29,32 @@ for risk in risks:
     for mit in riskmit:
         if mit.complete:
             mitlist.append(html.P(mit.description,style={"text-decoration": "line-through"}))
-            mitlist.append(html.P(mit.date,style={"text-decoration": "line-through"}))
+            mitlist.append(html.P(mit.date.strftime("%Y-%m-%d"),style={"text-decoration": "line-through"}))
         else:
             mitlist.append(html.P(mit.description))
-            mitlist.append(html.P(mit.date))
+            mitlist.append(html.P(mit.date.strftime("%Y-%m-%d")))
     risklist.append(html.Div(className="mit-container", children=mitlist))
     risklist.append(dcc.Graph(figure=tempfig))
 
-app = Dash()
+#Flask App
+flask_app = Flask(__name__)
+
+dash_app = Dash(__name__,server=flask_app,url_base_pathname='/dashboard/')
 
 
-app.layout = html.Div(children = [
+
+dash_app.layout = html.Div(children = [
     html.H1("Risk Register"),
     html.Div(className="grid-container", children=risklist)
 ])
-
+'''
 if __name__ == "__main__":
     app.run(debug=True)
+'''
+
+@flask_app.route('/')
+def home():
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    flask_app.run(debug=True)
