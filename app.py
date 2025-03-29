@@ -4,6 +4,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from dbcode.models import Risks, Persons, Mitigations
 from flask import Flask, render_template
+from sqlalchemy import select
+
+
 
 
 def create_risk_row(ifstatement:str,riskstatement:str,prob:int,impact:int):
@@ -52,6 +55,20 @@ dash_app.layout = html.Div(children = [
 @flask_app.route('/')
 def home():
     return render_template('index.html')
+
+@flask_app.route('/editrisk/<risk_id>', methods=['GET', 'POST'])
+def edit_risk(risk_id):
+    # Get the risk from the database
+
+    risk = session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
+    if risk is None:
+        return "Risk not found", 404
+
+    # Get mitigations for the risk
+    mitigations = session.execute(select(Mitigations).where(Mitigations.risk_id == risk_id)).scalars().all()
+
+    # Render the edit risk template with the risk and mitigations data
+    return render_template('riskdetail.html', risk=risk, mitigations=mitigations)
 
 if __name__ == '__main__':
     flask_app.run(debug=True)
