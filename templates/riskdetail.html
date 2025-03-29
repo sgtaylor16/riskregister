@@ -3,26 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Risk Details</title>
-    <label for="ifstatement">Edit If Statement</label><br>
-    <input type="text" id="ifstatement" name="ifstatement" value="{{ risk.ifstatement }}" style="width: 300px;"><br>
-    <label for="thenstatement">Edit Then Statement</label><br>
-    <input type="text" id="thenstatement" name="thenstatement" value="{{ risk.thenstatement }}" style="width: 300px;">
-    <h1>Probability</h1>
-    <div>
-        <label><input type="radio" name="probability" value="1"> 1</label>
-        <label><input type="radio" name="probability" value="2"> 2</label>
-        <label><input type="radio" name="probability" value="3"> 3</label>
-        <label><input type="radio" name="probability" value="4"> 4</label>
-        <label><input type="radio" name="probability" value="5"> 5</label>
-    </div>
-    <h1>Impact</h1>
-    <div>
-        <label><input type="radio" name="impact" value="1"> 1</label>
-        <label><input type="radio" name="impact" value="2"> 2</label>
-        <label><input type="radio" name="impact" value="3"> 3</label>
-        <label><input type="radio" name="impact" value="4"> 4</label>
-        <label><input type="radio" name="impact" value="5"> 5</label>
+    <title>Edit Risk</title>
+    <form action="" method="post">
+        {{ form.ifstatement.label }}<br>
+        {{ form.ifstatement(size=80) }}<br>
+        
+        {{ form.thenstatement.label }}<br>
+        {{ form.thenstatement(size=80) }}<br>
+        
+        {{ form.probability.label}}<br>
+        {% for subfield in form.probability %}
+            <tr>
+                <td>{{ subfield }}</td>
+                <td>{{ subfield.label }}</td>
+            </tr>
+        {% endfor %}
+        <br>
+        {{ form.impact.label }}<br>
+        {% for subfield in form.impact %}
+        <tr>
+            <td>{{ subfield }}</td>
+            <td>{{ subfield.label }}</td>
+        </tr>
+        {% endfor %}
+        <br>
+        
+        {{ form.submit() }}
+
+    </form>
+
+  
     </div>
 </head>
 <body>

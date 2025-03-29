@@ -1,0 +1,10 @@
+from flask_wtf import FlaskForm
+from wtforms import StringField, IntegerField, SubmitField, SubmitField, RadioField
+from wtforms.validators import DataRequired
+
+class RiskForm(FlaskForm):
+    ifstatement = StringField('If Statement', validators=[DataRequired()])
+    thenstatement = StringField('Then Statement', validators=[DataRequired()])
+    probability = RadioField('Probability', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
+    impact = RadioField('Impact', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
+    submit = SubmitField('Submit')

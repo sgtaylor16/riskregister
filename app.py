@@ -2,9 +2,14 @@ from dash import Dash, html, dcc
 from plotlytools import addcube
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import select
 from dbcode.models import Risks, Persons, Mitigations
 from flask import Flask, render_template
-from sqlalchemy import select
+from flask_wtf import CSRFProtect
+import secrets
+
+
+from forms import RiskForm
 
 
 
@@ -42,9 +47,9 @@ for risk in risks:
 #Flask App
 flask_app = Flask(__name__)
 
+flask_app.secret_key = secrets.token_urlsafe(16)
+
 dash_app = Dash(__name__,server=flask_app,url_base_pathname='/dashboard/')
-
-
 
 dash_app.layout = html.Div(children = [
     html.H1("Risk Register"),
@@ -68,7 +73,8 @@ def edit_risk(risk_id):
     mitigations = session.execute(select(Mitigations).where(Mitigations.risk_id == risk_id)).scalars().all()
 
     # Render the edit risk template with the risk and mitigations data
-    return render_template('riskdetail.html', risk=risk, mitigations=mitigations)
+    form = RiskForm(ifstatement=risk.ifstatement, thenstatement=risk.thenstatement, probability=str(risk.probability), impact=str(risk.impact))
+    return render_template('riskdetail.html', risk=risk, mitigations=mitigations, form=form)
 
 if __name__ == '__main__':
     flask_app.run(debug=True)
