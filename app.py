@@ -18,10 +18,12 @@ risks = session.query(Risks).all()
 
 risklist = []
 for risk in risks:
+    print(risk.program)
     tempfig = addcube(275,risk.probability,risk.impact)
     risklist.append(html.A(risk.id,href=f'/editrisk/{risk.id}'))
     risklist.append(html.P(risk.ifstatement))
     risklist.append(html.P(risk.thenstatement))
+    risklist.append(html.P(risk.program.name))
     #Mitigations
     mitlist = []
     riskmit = session.query(Mitigations).filter(Mitigations.risk_id == risk.id).all()
@@ -71,7 +73,6 @@ def edit_risk(risk_id):
         risk.thenstatement = form.thenstatement.data
         risk.probability = form.probability.data
         risk.impact = form.impact.data
-        print('in here')
         session.commit()
 
         return redirect('/')
@@ -86,7 +87,6 @@ def add_program():
         recordslist.append({"id":oneprogram.id, "Program":oneprogram.name, "Description":oneprogram.description})
     form = ProgramForm()
     if form.validate_on_submit():
-        print('in here')
         # Add the program to the database
         program = Programs(name=form.name.data, description=form.description.data)
         session.add(program)
