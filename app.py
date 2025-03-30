@@ -4,20 +4,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import select
 from dbcode.models import Risks, Persons, Mitigations
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from flask_wtf import CSRFProtect
 import secrets
-
-
 from forms import RiskForm
 
-
-
-
-def create_risk_row(ifstatement:str,riskstatement:str,prob:int,impact:int):
-    return html.Div(
-        className="grid-container"
-    )
 
 #Get Risks from the database
 engine = create_engine('sqlite:///dbcode/riskregister.db')
@@ -74,7 +65,20 @@ def edit_risk(risk_id):
 
     # Render the edit risk template with the risk and mitigations data
     form = RiskForm(ifstatement=risk.ifstatement, thenstatement=risk.thenstatement, probability=str(risk.probability), impact=str(risk.impact))
+    if form.validate_on_submit():
+        # Update the risk in the database
+        risk.ifstatement = form.ifstatement.data
+        risk.thenstatement = form.thenstatement.data
+        risk.probability = form.probability.data
+        risk.impact = form.impact.data
+
+        session.commit()
+
+        return redirect('/')
+
     return render_template('riskdetail.html', risk=risk, mitigations=mitigations, form=form)
 
+
+    
 if __name__ == '__main__':
     flask_app.run(debug=True)
