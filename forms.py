@@ -8,3 +8,8 @@ class RiskForm(FlaskForm):
     probability = RadioField('Probability', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
     impact = RadioField('Impact', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class ProgramForm(FlaskForm):
+    name = StringField('Program Name', validators=[DataRequired()])
+    description = StringField('Description', validators=[DataRequired()])
+    submit = SubmitField('Submit')

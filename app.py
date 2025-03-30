@@ -3,11 +3,11 @@ from plotlytools import addcube
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import select
-from dbcode.models import Risks, Persons, Mitigations
+from dbcode.models import Risks, Persons, Mitigations, Programs
 from flask import Flask, render_template, redirect
 from flask_wtf import CSRFProtect
 import secrets
-from forms import RiskForm
+from forms import RiskForm, ProgramForm
 
 
 #Get Risks from the database
@@ -71,14 +71,29 @@ def edit_risk(risk_id):
         risk.thenstatement = form.thenstatement.data
         risk.probability = form.probability.data
         risk.impact = form.impact.data
-
+        print('in here')
         session.commit()
 
         return redirect('/')
 
     return render_template('riskdetail.html', risk=risk, mitigations=mitigations, form=form)
 
+@flask_app.route('/addprograms/', methods=['GET', 'POST'])
+def add_program():
+    recordslist = []
+    allprograms = session.query(Programs).all()
+    for oneprogram in allprograms:
+        recordslist.append({"id":oneprogram.id, "Program":oneprogram.name, "Description":oneprogram.description})
+    form = ProgramForm()
+    if form.validate_on_submit():
+        print('in here')
+        # Add the program to the database
+        program = Programs(name=form.name.data, description=form.description.data)
+        session.add(program)
+        session.commit()
+        return redirect('/')
 
+    return render_template('addprogram.html', form=form, records=recordslist)
     
 if __name__ == '__main__':
     flask_app.run(debug=True)

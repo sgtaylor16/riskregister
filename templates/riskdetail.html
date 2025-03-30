@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
     <title>Edit Risk</title>
     <form action="" method="post">
+        {{ form.hidden_tag() }}
         {{ form.ifstatement.label }}<br>
         {{ form.ifstatement(size=80) }}<br>
         
@@ -31,11 +34,11 @@
         {{ form.submit() }}
 
     </form>
+    <a href="/">Back to Top</a>
 
   
     </div>
-</head>
-<body>
+
     
 </body>
 </html>
