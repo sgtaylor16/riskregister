@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SubmitField, SubmitField, RadioField
+from wtforms import StringField, IntegerField, SubmitField, SubmitField, RadioField,SelectField
 from wtforms.validators import DataRequired
 
 class RiskForm(FlaskForm):
@@ -13,3 +13,7 @@ class ProgramForm(FlaskForm):
     name = StringField('Program Name', validators=[DataRequired()])
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class DeleteProgramForm(FlaskForm):
+    program_id = SelectField('Program ID', validators=[DataRequired()])
+    submit = SubmitField('Delete Program')

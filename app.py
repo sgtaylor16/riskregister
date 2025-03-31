@@ -4,10 +4,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import select
 from dbcode.models import Risks, Persons, Mitigations, Programs
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect,flash
 from flask_wtf import CSRFProtect
 import secrets
-from forms import RiskForm, ProgramForm
+from forms import RiskForm, ProgramForm, DeleteProgramForm
 
 
 #Get Risks from the database
@@ -92,8 +92,25 @@ def add_program():
         session.add(program)
         session.commit()
         return redirect('/')
+    
+    deleteForm = DeleteProgramForm()
+    deleteForm.program_id.choices = [(program.id, program.name) for program in allprograms]
+    if deleteForm.validate_on_submit():
+        # Delete the program from the database
+        program_id = deleteForm.program_id.data
+        program = session.query(Programs).filter(Programs.id == program_id).first()
+        
+        riskscheck = session.query(Risks).filter(Risks.program_id == program_id).all()
+        if riskscheck:
+            flash("Cannot delete program with associated risks.")
+            return redirect('/addprograms/')
+        # Delete the program if it exists
+        if program:
+            session.delete(program)
+            session.commit()
+        return redirect('/')
 
-    return render_template('addprogram.html', form=form, records=recordslist)
+    return render_template('addprogram.html', form=form ,deleteform=deleteForm, records=recordslist)
     
 if __name__ == '__main__':
     flask_app.run(debug=True)
