@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programs</title>
+</head>
+<body>
+    <h1>Programs</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Program Name</th>
+            <th>Description</th>
+        </tr>
+        {% for program in records %}
+        <tr>
+            <td>{{ program.id }}</td>
+            <td>{{ program.Program }}</td>
+            <td>{{ program.Description }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h1>Add Program</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.name.label }}<br>
+        {{ form.name(size=80) }}<br>
+        {{ form.description.label }}<br>
+        {{ form.description(size=80) }}<br>
+        {{ form.submit() }}
+    </form>
+    <h1>Delete Program</h1>
+    <form action="" method="post">
+        {{ deleteform.hidden_tag() }}
+        {{ deleteform.program_id() }}<br>
+        {{ deleteform.submit() }}
+
+    <a href="/">Back to Top</a>
+    
+</body>
+</html>
