@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect
 from forms import RiskForm
 from dbcode.models import Risks, Mitigations
 from sqlalchemy import select
-from app import db
+from extensions import db
 
 
 

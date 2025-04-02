@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, flash
 from forms import ProgramForm, DeleteProgramForm
 from dbcode.models import Programs, Risks
 from sqlalchemy import select
-from app import db
+from extensions import db
 programs_bp = Blueprint('programs', __name__)
 
 
