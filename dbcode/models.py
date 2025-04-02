@@ -4,7 +4,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer, String, DateTime
 from datetime import datetime
 from typing import List
-from app import db
+from extensions import db
 
 
 class Persons(db.Model):
