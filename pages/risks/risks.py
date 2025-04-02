@@ -9,9 +9,9 @@ from app import db
 risks_bp = Blueprint('risks', __name__)
 
 
-
 @risks_bp.route('/editrisk/<risk_id>', methods=['GET', 'POST'])
 def edit_risk(risk_id):
+    print("i made it here")
     # Get the risk from the database
 
     risk = db.session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
