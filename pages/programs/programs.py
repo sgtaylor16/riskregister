@@ -9,7 +9,7 @@ programs_bp = Blueprint('programs', __name__)
 @programs_bp.route('/addprograms/', methods=['GET', 'POST'])
 def add_program():
     recordslist = []
-    allprograms = session.query(Programs).all()
+    allprograms = db.session.query(Programs).all()
     for oneprogram in allprograms:
         recordslist.append({"id":oneprogram.id, "Program":oneprogram.name, "Description":oneprogram.description})
     form = ProgramForm()
