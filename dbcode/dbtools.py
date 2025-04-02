@@ -3,7 +3,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
 from sqlalchemy import Table, Column, Integer, String, DateTime
 from datetime import datetime
-
 from models import Persons, Risks, Mitigations, Base, Programs
 
 
