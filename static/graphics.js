@@ -41,7 +41,7 @@ function convertframe(i,j){
         4:1,
         5:0
     }
-    return [imap[i],j-1];
+    return [i-1,imap[j]];
 }
 
 export function drawriskBox(size,svgselector,prob,impact){
@@ -68,9 +68,13 @@ export function drawriskBox(size,svgselector,prob,impact){
         }
     }
 
+    let [newprob,newimpact] = convertframe(prob,impact);
+    
     svg.append("circle")
-        .attr("cx",cubewidth*prob + margin + cubewidth/2)
-        .attr("cy",cubewidth*impact + margin + cubewidth/2)
+        .attr("cx",cubewidth*newprob+ margin + cubewidth/2)
+        .attr("cy",cubewidth*newimpact + margin + cubewidth/2)
+        .attr("r",cubewidth/3)
+        .attr("fill","black")
 }
 
 export function plotRisk(size,svgselector,prob,impact){
@@ -86,11 +90,10 @@ export function plotRisk(size,svgselector,prob,impact){
     const svg = d3.select(svgselector)
                 .select("svg");
 
-    svg.append("circle")
         
 }
 
-export function riskRow(element,id,ifstatement,thenstatement,program){
+export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact){
     let riskrow = d3.select(element).append("div").attr("class","riskrow")
 
     let idcolumn = riskrow.append("div").attr("class","riskid")
@@ -105,8 +108,10 @@ export function riskRow(element,id,ifstatement,thenstatement,program){
     let thencolumn= riskrow.append("div").attr("class","ifthen")
     thencolumn.append("p").text(thenstatement);
 
-    //let riskcube = riskrow.append("div").attr("class","riskcube").id("riskrow"+id);
+    riskrow.append("div").attr("class","riskcube").attr("id","riskrow"+id);
 
-    //drawriskBox(100,"#riskrow"+id)
+    let selector = "#riskrow"+ id
+    console.log(selector)
+    drawriskBox(100,selector,prob,impact);
 
 }
