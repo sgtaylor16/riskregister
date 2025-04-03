@@ -97,7 +97,7 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
     let riskrow = d3.select(element).append("div").attr("class","riskrow")
 
     let idcolumn = riskrow.append("div").attr("class","riskid")
-    idcolumn.append("p").text(id);
+    idcolumn.append('p').append("a").attr('href',"/editrisk/" + id).text(id);
 
     let programcolumn = riskrow.append("div").attr("class","program")
     programcolumn.append("p").text(program);
