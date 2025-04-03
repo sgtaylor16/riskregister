@@ -93,7 +93,7 @@ export function plotRisk(size,svgselector,prob,impact){
         
 }
 
-export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact){
+export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact,mitigationlist){
     let riskrow = d3.select(element).append("div").attr("class","riskrow")
 
     let idcolumn = riskrow.append("div").attr("class","riskid")
@@ -111,7 +111,18 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
     riskrow.append("div").attr("class","riskcube").attr("id","riskrow"+id);
 
     let selector = "#riskrow"+ id
-    console.log(selector)
     drawriskBox(100,selector,prob,impact);
+
+    let mitdiv = riskrow.append("div").attr("class","mitigations")
+    if (mitigationlist.length > 0){
+        mitigationlist.forEach(mitigation => {
+            mitdiv.append("p").text(mitigation.id)
+            mitdiv.append("p").text(mitigation.description)
+            mitdiv.append("p").text(mitigation.probability);
+            mitdiv.append("p").text(mitigation.impact);
+            mitdiv.append("p").text(mitigation.date);
+            mitdiv.append("p").text(mitigation.complete);
+        })
+    }
 
 }
