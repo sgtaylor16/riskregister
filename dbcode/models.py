@@ -1,21 +1,20 @@
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
-from sqlalchemy import Table, Column, Integer, String, DateTime
+from sqlalchemy import Integer, String, DateTime
 from datetime import datetime
 from typing import List
+from extensions import db
 
-class Base(DeclarativeBase):
-    pass
 
-class Persons(Base):
+class Persons(db.Model):
     __tablename__ = 'persons'
     id: Mapped[int] = mapped_column(primary_key=True)
     last_name: Mapped[str] = mapped_column(String(50))
     first_name: Mapped[str] = mapped_column(String(50))
     risks: Mapped[List["Risks"]] = relationship(back_populates="person")
 
-class Risks(Base):
+class Risks(db.Model):
     __tablename__ = 'risks'
     id: Mapped[int] = mapped_column(primary_key=True)
     ifstatement: Mapped[str] = mapped_column(String(100))
@@ -28,7 +27,7 @@ class Risks(Base):
     program: Mapped["Programs"] = relationship(back_populates="risk")
     mitigations: Mapped[List["Mitigations"]] = relationship(back_populates="risk")
 
-class Mitigations(Base):
+class Mitigations(db.Model):
     __tablename__ = 'mitigations'
     id: Mapped[int] = mapped_column(primary_key=True)
     description: Mapped[str] = mapped_column(String(100))
@@ -39,7 +38,7 @@ class Mitigations(Base):
     date: Mapped[datetime] = mapped_column(DateTime)
     complete: Mapped[bool] = mapped_column(default=False)
 
-class Programs(Base):
+class Programs(db.Model):
     __tablename__ = 'programs'
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(100))

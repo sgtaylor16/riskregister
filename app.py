@@ -1,116 +1,23 @@
-from dash import Dash, html, dcc
-from plotlytools import addcube
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import select
-from dbcode.models import Risks, Persons, Mitigations, Programs
-from flask import Flask, render_template, redirect,flash
-from flask_wtf import CSRFProtect
+from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
 import secrets
-from forms import RiskForm, ProgramForm, DeleteProgramForm
+from extensions import db
 
 
-#Get Risks from the database
-engine = create_engine('sqlite:///dbcode/riskregister.db')
-Session = sessionmaker(bind=engine)
-session = Session()
-risks = session.query(Risks).all()
 
-risklist = []
-for risk in risks:
-    print(risk.program)
-    tempfig = addcube(275,risk.probability,risk.impact)
-    risklist.append(html.A(risk.id,href=f'/editrisk/{risk.id}'))
-    risklist.append(html.P(risk.ifstatement))
-    risklist.append(html.P(risk.thenstatement))
-    risklist.append(html.P(risk.program.name))
-    #Mitigations
-    mitlist = []
-    riskmit = session.query(Mitigations).filter(Mitigations.risk_id == risk.id).all()
-    for mit in riskmit:
-        if mit.complete:
-            mitlist.append(html.P(mit.description,style={"text-decoration": "line-through"}))
-            mitlist.append(html.P(mit.date.strftime("%Y-%m-%d"),style={"text-decoration": "line-through"}))
-        else:
-            mitlist.append(html.P(mit.description))
-            mitlist.append(html.P(mit.date.strftime("%Y-%m-%d")))
-    risklist.append(html.Div(className="mit-container", children=mitlist))
-    risklist.append(dcc.Graph(figure=tempfig))
+def create_app():
+    flask_app = Flask(__name__)
+    flask_app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{flask_app.root_path}/dbcode/riskregister.db"
+    flask_app.secret_key = secrets.token_urlsafe(16)
 
-#Flask App
-flask_app = Flask(__name__)
+    db.init_app(flask_app)
 
-flask_app.secret_key = secrets.token_urlsafe(16)
+    from pages.risks.risks import risks_bp
+    from pages .programs.programs import programs_bp
+    from pages.main import index_bp
+    flask_app.register_blueprint(index_bp)
+    flask_app.register_blueprint(risks_bp)
+    flask_app.register_blueprint(programs_bp)
 
-dash_app = Dash(__name__,server=flask_app,url_base_pathname='/dashboard/')
+    return flask_app
 
-dash_app.layout = html.Div(children = [
-    html.H1("Risk Register"),
-    html.Div(className="grid-container", children=risklist)
-])
-
-
-@flask_app.route('/')
-def home():
-    return render_template('index.html')
-
-@flask_app.route('/editrisk/<risk_id>', methods=['GET', 'POST'])
-def edit_risk(risk_id):
-    # Get the risk from the database
-
-    risk = session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
-    if risk is None:
-        return "Risk not found", 404
-
-    # Get mitigations for the risk
-    mitigations = session.execute(select(Mitigations).where(Mitigations.risk_id == risk_id)).scalars().all()
-
-    # Render the edit risk template with the risk and mitigations data
-    form = RiskForm(ifstatement=risk.ifstatement, thenstatement=risk.thenstatement, probability=str(risk.probability), impact=str(risk.impact))
-    if form.validate_on_submit():
-        # Update the risk in the database
-        risk.ifstatement = form.ifstatement.data
-        risk.thenstatement = form.thenstatement.data
-        risk.probability = form.probability.data
-        risk.impact = form.impact.data
-        session.commit()
-
-        return redirect('/')
-
-    return render_template('riskdetail.html', risk=risk, mitigations=mitigations, form=form)
-
-@flask_app.route('/addprograms/', methods=['GET', 'POST'])
-def add_program():
-    recordslist = []
-    allprograms = session.query(Programs).all()
-    for oneprogram in allprograms:
-        recordslist.append({"id":oneprogram.id, "Program":oneprogram.name, "Description":oneprogram.description})
-    form = ProgramForm()
-    if form.validate_on_submit():
-        # Add the program to the database
-        program = Programs(name=form.name.data, description=form.description.data)
-        session.add(program)
-        session.commit()
-        return redirect('/')
-    
-    deleteForm = DeleteProgramForm()
-    deleteForm.program_id.choices = [(program.id, program.name) for program in allprograms]
-    if deleteForm.validate_on_submit():
-        # Delete the program from the database
-        program_id = deleteForm.program_id.data
-        program = session.query(Programs).filter(Programs.id == program_id).first()
-        
-        riskscheck = session.query(Risks).filter(Risks.program_id == program_id).all()
-        if riskscheck:
-            flash("Cannot delete program with associated risks.")
-            return redirect('/addprograms/')
-        # Delete the program if it exists
-        if program:
-            session.delete(program)
-            session.commit()
-        return redirect('/')
-
-    return render_template('addprogram.html', form=form ,deleteform=deleteForm, records=recordslist)
-    
-if __name__ == '__main__':
-    flask_app.run(debug=True)
