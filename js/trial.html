@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trial Graphics</title>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px; /* Adjust the gap between columns as needed */
+        }
+
+        .grid-item {
+            background-color: #f0f0f0; /* Adjust the background color as needed */
+            padding: 20px; /* Adjust the padding as needed */
+            border: 1px solid #ccc; /* Adjust the border as needed */
+            text-align: center; /* Center the text */
+        }
+    </style>
+</head>
+<body>
+    <div id="trial" class = "grid-container">
+        <div>This is my if statment</div>
+        <div>This is my impact statement</div>
+        <div class="onerisk"></div>
+    <div></div>
+
+    
+</body>
+<script type = "module">
+    import {cubecolor,drawriskBox} from './graphics.js';
+    console.log(cubecolor(4,0))
+    drawriskBox(140,"div.onerisk")
+</script>
+</html>

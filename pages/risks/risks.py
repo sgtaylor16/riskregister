@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, redirect
+from flask import Blueprint, render_template, redirect, jsonify
 from forms import RiskForm
 from dbcode.models import Risks, Mitigations
 from sqlalchemy import select
 from extensions import db
+
 
 
 
@@ -34,3 +35,20 @@ def edit_risk(risk_id):
         return redirect('/')
 
     return render_template('riskdetail.html', risk=risk, mitigations=mitigations, form=form)
+
+@risks_bp.route('/riskdata', methods=['GET'])
+def risk_dashboard():
+    # Get all risks from the database
+    risks = db.session.execute(select(Risks)).scalars().all()
+    listofrisks = []
+    for risk in risks:
+        newob = {}
+        newob['id'] = risk.id
+        newob['ifstatement'] = risk.ifstatement
+        newob['thenstatement'] = risk.thenstatement
+        newob['probability'] = risk.probability
+        newob['program'] = risk.program.name
+        newob['impact'] = risk.impact
+        listofrisks.append(newob)
+    print(listofrisks)
+    return jsonify(listofrisks)
