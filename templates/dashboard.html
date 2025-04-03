@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Dashboard</title>
+    <style>
+        .riskrow {
+            display: grid;
+            grid-template-columns: 1fr 2fr 3fr 3fr 3fr;
+            gap: 10px;
+        }
+        .riskrow > div.riskid {
+            text-align: center;
+        }
+        .riskrow > div.ifthen {
+            text-align: center;
+        }
+        .riskcrow > div.riskcube {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Risk Dashboard</h1>
+    <div id="risklist"></div>
+    
+</body>
+<script type ="module">
+    import {riskRow} from "/static/graphics.js";
+    
+    fetch("/riskdata")
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(risk => {
+            riskRow('#risklist',risk.id,risk.ifstatement,risk.thenstatement,risk.program);
+        })
+    })
+
+
+</script>
+</html>

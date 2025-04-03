@@ -90,24 +90,23 @@ export function plotRisk(size,svgselector,prob,impact){
         
 }
 
-export function riskRow(element,id,ifstatement,thenstatement,program,impact,probability){
-    let riskrow = element.append("div").attr("class","riskrow")
+export function riskRow(element,id,ifstatement,thenstatement,program){
+    let riskrow = d3.select(element).append("div").attr("class","riskrow")
 
-    let id = riskrow.append("div").attr("class","riskid")
-    id.append("p").text(id);
+    let idcolumn = riskrow.append("div").attr("class","riskid")
+    idcolumn.append("p").text(id);
 
-    let ifstatement = riskrow.append("div").attr("class","ifthen")
-    ifstatement.append("p").text(ifstatement);
+    let programcolumn = riskrow.append("div").attr("class","program")
+    programcolumn.append("p").text(program);
 
-    let thenstatement = riskrow.append("div").attr("class","ifthen")
-    thenstatement.append("p").text(thenstatement);
+    let ifcolumn = riskrow.append("div").attr("class","ifthen")
+    ifcolumn.append("p").text(ifstatement);
 
-    let riskcube = riskrow.append("div").attr("class","riskcube").id("riskrow"+id);
+    let thencolumn= riskrow.append("div").attr("class","ifthen")
+    thencolumn.append("p").text(thenstatement);
 
-    drawriskBox(100,"#riskrow"+id)
+    //let riskcube = riskrow.append("div").attr("class","riskcube").id("riskrow"+id);
 
-
-    
-
+    //drawriskBox(100,"#riskrow"+id)
 
 }
