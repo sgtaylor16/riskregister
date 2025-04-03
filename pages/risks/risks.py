@@ -49,6 +49,19 @@ def risk_dashboard():
         newob['probability'] = risk.probability
         newob['program'] = risk.program.name
         newob['impact'] = risk.impact
+        mitigationlist = []
+        for mitigation in risk.mitigations:
+            mitigationlist.append({
+                'id': mitigation.id,
+                'description': mitigation.description,
+                'probability': mitigation.probability,
+                'impact': mitigation.impact,
+                'date': mitigation.date.strftime('%Y-%m-%d'),
+                'complete': mitigation.complete
+            })
+        newob['mitigations'] = mitigationlist
+
+
         listofrisks.append(newob)
     print(listofrisks)
     return jsonify(listofrisks)
