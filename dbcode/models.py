@@ -30,13 +30,13 @@ class Risks(db.Model):
 class Mitigations(db.Model):
     __tablename__ = 'mitigations'
     id: Mapped[int] = mapped_column(primary_key=True)
-    description: Mapped[str] = mapped_column(String(100))
+    description: Mapped[str] = mapped_column(String(100), nullable=False)
     probability: Mapped[int] = mapped_column(Integer)
     impact: Mapped[int] = mapped_column(Integer)
     risk_id: Mapped[int] = mapped_column(ForeignKey('risks.id'))
     risk: Mapped['Risks'] = relationship(back_populates="mitigations")
     date: Mapped[datetime] = mapped_column(DateTime)
-    complete: Mapped[bool] = mapped_column(default=False)
+    complete: Mapped[int] = mapped_column(default=0)
 
 class Programs(db.Model):
     __tablename__ = 'programs'

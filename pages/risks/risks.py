@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, jsonify
-from forms import RiskForm
+from forms import RiskForm,MitigationForm
 from dbcode.models import Risks, Mitigations
 from sqlalchemy import select
 from extensions import db
@@ -12,7 +12,6 @@ risks_bp = Blueprint('risks', __name__)
 
 @risks_bp.route('/editrisk/<risk_id>', methods=['GET', 'POST'])
 def edit_risk(risk_id):
-    print("i made it here")
     # Get the risk from the database
 
     risk = db.session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
@@ -34,11 +33,11 @@ def edit_risk(risk_id):
 
         return redirect('/')
 
-    return render_template('riskdetail.html', risk=risk, mitigations=mitigations, form=form)
+    return render_template('riskdetail.html', form=form)
 
 @risks_bp.route('/riskdata', methods=['GET'])
 def risk_dashboard():
-    # Get all risks from the database
+    # This route function will be called via fetch when the user accesses the risk dashboard
     risks = db.session.execute(select(Risks)).scalars().all()
     listofrisks = []
     for risk in risks:
@@ -65,3 +64,25 @@ def risk_dashboard():
         listofrisks.append(newob)
     print(listofrisks)
     return jsonify(listofrisks)
+
+@risks_bp.route('/editmit/<mitigation_id>', methods=['GET', 'POST'])
+def edit_mitigation(mitigation_id):
+    # Get the mitigation from the database
+    mitigation = db.session.execute(select(Mitigations).where(Mitigations.id == mitigation_id)).scalar_one_or_none()
+    if mitigation is None:
+        return "Mitigation not found", 404
+
+    # Render the edit risk template with the risk and mitigations data
+    form = MitigationForm(description=mitigation.description, probability=str(mitigation.probability), impact=str(mitigation.impact), date=mitigation.date.strftime('%Y-%m-%d'), complete=str(mitigation.complete))
+    if form.validate_on_submit():
+        # Update the risk in the database
+        mitigation.ifstatement = form.ifstatement.data
+        mitigation.thenstatement = form.thenstatement.data
+        mitigation.probability = form.probability.data
+        mitigation.impact = form.impact.data
+        mitigation.complete = form.complete.data
+        db.session.commit()
+
+        return redirect('/')
+
+    return render_template('editmitigation.html',form=form)

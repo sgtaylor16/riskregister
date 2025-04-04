@@ -116,7 +116,7 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
     let mitdiv = riskrow.append("div").attr("class","mitigations")
     if (mitigationlist.length > 0){
         mitigationlist.forEach(mitigation => {
-            mitdiv.append("p").text(mitigation.id)
+            mitdiv.append("p").append("a").attr("href","/editmit/" + mitigation.id).text(mitigation.id)
             mitdiv.append("p").text(mitigation.description)
             mitdiv.append("p").text(mitigation.probability);
             mitdiv.append("p").text(mitigation.impact);
