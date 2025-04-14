@@ -1,10 +1,8 @@
 from flask import Blueprint, render_template, redirect, jsonify
-from forms import RiskForm,MitigationForm
+from forms import RiskForm,MitigationForm,DeleteMitigationForm
 from dbcode.models import Risks, Mitigations
 from sqlalchemy import select
 from extensions import db
-
-
 
 
 risks_bp = Blueprint('risks', __name__)
@@ -62,7 +60,6 @@ def risk_dashboard():
 
 
         listofrisks.append(newob)
-    print(listofrisks)
     return jsonify(listofrisks)
 
 @risks_bp.route('/editmit/<mitigation_id>', methods=['GET', 'POST'])
@@ -84,5 +81,14 @@ def edit_mitigation(mitigation_id):
         db.session.commit()
 
         return redirect('/')
+    
+    deletemitform = DeleteMitigationForm()
+    if deletemitform.validate_on_submit():
+        # Delete the mitigation from the database
+        print("Deleting mitigation")
+        db.session.delete(mitigation)
+        db.session.commit()
+        return redirect('/')
 
-    return render_template('editmitigation.html',form=form)
+    return render_template('editmitigation.html',form=form, deletemitform=deletemitform)
+

@@ -17,7 +17,7 @@
                 <td>{{ subfield }}</td>
                 <td>{{ subfield.label }}</td>
             </tr>
-        {% endfor %}
+        {% endfor %}<br>
         {{ form.impact.label }}<br>
         {% for subfield in form.impact %}
             <tr>
@@ -39,7 +39,11 @@
         <br>
 
         {{ form.submit() }}
-
+    </form>
+    <h1>Delete Mitigation</h1>
+    <form>
+     {{ deletemitform.hidden_tag() }}
+     {{ deletemitform.submit() }}
     </form>
     <a href="/">Back to Top</a>
     
