@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template
+from forms import newRiskButton
 
 index_bp = Blueprint('index',__name__)
 
@@ -8,4 +9,5 @@ def index():
 
 @index_bp.route('/dashboard/')
 def dashboard():
-    return render_template("dashboard.html")
+    riskbutton = newRiskButton()
+    return render_template("dashboard.html", riskbutton=riskbutton)

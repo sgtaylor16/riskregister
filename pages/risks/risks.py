@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, jsonify
-from forms import RiskForm,MitigationForm,DeleteMitigationForm
+from forms import RiskForm,MitigationForm,DeleteMitigationForm, newRiskButton
 from dbcode.models import Risks, Mitigations
 from sqlalchemy import select
 from extensions import db
