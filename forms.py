@@ -28,3 +28,6 @@ class MitigationForm(FlaskForm):
 
 class DeleteMitigationForm(FlaskForm):
     submit = SubmitField('Delete Mitigation')
+
+class newRiskButton(FlaskForm):
+    submit = SubmitField('New Risk')
