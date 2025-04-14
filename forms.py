@@ -25,3 +25,6 @@ class MitigationForm(FlaskForm):
     date = StringField('Date (YYYY-MM-DD)')
     complete = RadioField('Complete?', choices=[('1', 'Yes'), ('0', 'No')], validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class DeleteMitigationForm(FlaskForm):
+    submit = SubmitField('Delete Mitigation')
