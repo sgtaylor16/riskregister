@@ -21,7 +21,7 @@ class Risks(db.Model):
     thenstatement: Mapped[str] = mapped_column(String(100))
     probability: Mapped[int] = mapped_column(Integer)
     impact: Mapped[int] = mapped_column(Integer)
-    person_id: Mapped[int] = mapped_column(ForeignKey('persons.id'))
+    person_id: Mapped[int] = mapped_column(ForeignKey('persons.id'),nullable=True)
     person: Mapped['Persons'] = relationship(back_populates="risks")
     program_id: Mapped[int] = mapped_column(ForeignKey('programs.id'))
     program: Mapped["Programs"] = relationship(back_populates="risk")

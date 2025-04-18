@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, jsonify
 from forms import RiskForm,MitigationForm,DeleteMitigationForm, newRiskButton
-from dbcode.models import Risks, Mitigations
+from dbcode.models import Risks, Mitigations, Programs
 from sqlalchemy import select
 from extensions import db
 
@@ -11,10 +11,23 @@ risks_bp = Blueprint('risks', __name__)
 @risks_bp.route('/editrisk/<risk_id>', methods=['GET', 'POST'])
 def edit_risk(risk_id):
     # Get the risk from the database
-
     risk = db.session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
     if risk is None:
         return "Risk not found", 404
+    form = RiskForm()
+    if (Programs.query.all() is not None):
+        print("Programs exist")
+        form.Program.choices = sorted([(program.id, program.name) for program in Programs.query.all()])
+
+    if form.validate_on_submit():
+        # Create a new risk in the database
+            newrisk = Risks(ifstatement=form.ifstatement.data, thenstatement=form.thenstatement.data, probability=form.probability.data, impact=form.impact.data)
+            db.session.add(newrisk)
+            db.session.commit()
+
+            return redirect('/')
+    
+    return render_template('riskdetail.html', form=form)
 
     # Get mitigations for the risk
     mitigations = db.session.execute(select(Mitigations).where(Mitigations.risk_id == risk_id)).scalars().all()
