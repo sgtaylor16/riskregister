@@ -3,7 +3,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
 from sqlalchemy import Table, Column, Integer, String, DateTime
 from datetime import datetime
-from models import Persons, Risks, Mitigations, Base, Programs
+from dbcode.models import Persons, Risks, Mitigationsquit, Programs
+from extensions import db
 
 
 from sqlalchemy import create_engine
@@ -11,12 +12,12 @@ from sqlalchemy.orm import sessionmaker
 
 def createdb():
 
-    engine = create_engine('sqlite:///riskregister.db')
-    Base.metadata.create_all(engine)
+    engine = create_engine('sqlite:///dbcode/riskregister.db')
+    db.metadata.create_all(engine)
 
 
 def populatedb():
-    engine = create_engine('sqlite:///riskregister.db')
+    engine = create_engine('sqlite:///dbcode/riskregister.db')
     Session = sessionmaker(bind=engine)
     session = Session()
 

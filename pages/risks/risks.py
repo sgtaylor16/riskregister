@@ -10,13 +10,15 @@ risks_bp = Blueprint('risks', __name__)
 
 @risks_bp.route('/editrisk/<risk_id>', methods=['GET', 'POST'])
 def edit_risk(risk_id):
+    # Find the maximum risk ID in the database
+    max_risk_id = db.session.execute(select(Risks.id).order_by(Risks.id.desc())).scalar_one_or_none()
+    print(f"Max risk ID: {max_risk_id}")
     # Get the risk from the database
     risk = db.session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
     if risk is None:
         return "Risk not found", 404
     form = RiskForm()
     if (Programs.query.all() is not None):
-        print("Programs exist")
         form.Program.choices = sorted([(program.id, program.name) for program in Programs.query.all()])
 
     if form.validate_on_submit():
@@ -27,7 +29,6 @@ def edit_risk(risk_id):
 
             return redirect('/')
     
-    return render_template('riskdetail.html', form=form)
 
     # Get mitigations for the risk
     mitigations = db.session.execute(select(Mitigations).where(Mitigations.risk_id == risk_id)).scalars().all()
