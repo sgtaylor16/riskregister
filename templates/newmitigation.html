@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Mitigation</title>
+</head>
+<body>
+    <h1>Edit Mitigation</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.description.label }}<br>
+        {{ form.description(size=80)}}<br>
+        {{ form.probability.label}}<br>
+        {% for subfield in form.probability %}
+            <tr>
+                <td>{{ subfield }}</td>
+                <td>{{ subfield.label }}</td>
+            </tr>
+        {% endfor %}<br>
+        {{ form.impact.label }}<br>
+        {% for subfield in form.impact %}
+            <tr>
+                <td>{{ subfield }}</td>
+                <td>{{ subfield.label }}</td>
+            </tr>
+        {% endfor %}
+        <br>
+        {{ form.date.label}}<br>
+        {{ form.date}}<br>
+        {{ form.complete.label}}<br>
+        {{ form.compmlete}}
+        {% for subfield in form.complete %}
+            <tr>
+                <td>{{ subfield }}</td>
+                <td>{{ subfield.label }}</td>
+            </tr>
+        {% endfor %}
+        <br>
+
+        {{ form.submit() }}
+    </form>
