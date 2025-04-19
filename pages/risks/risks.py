@@ -10,42 +10,60 @@ risks_bp = Blueprint('risks', __name__)
 
 @risks_bp.route('/editrisk/<risk_id>', methods=['GET', 'POST'])
 def edit_risk(risk_id):
+   
     # Find the maximum risk ID in the database
-    max_risk_id = db.session.execute(select(Risks.id).order_by(Risks.id.desc())).scalar_one_or_none()
-    print(f"Max risk ID: {max_risk_id}")
-    # Get the risk from the database
-    risk = db.session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
-    if risk is None:
-        return "Risk not found", 404
-    form = RiskForm()
-    if (Programs.query.all() is not None):
-        form.Program.choices = sorted([(program.id, program.name) for program in Programs.query.all()])
+    max_risk_id = int(db.session.query(db.func.max(Risks.id)).scalar())
 
-    if form.validate_on_submit():
-        # Create a new risk in the database
-            newrisk = Risks(ifstatement=form.ifstatement.data, thenstatement=form.thenstatement.data, probability=form.probability.data, impact=form.impact.data)
-            db.session.add(newrisk)
+    if int(risk_id) <= max_risk_id:
+    #It is an existing risk get it.
+
+        risk = db.session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
+        if risk is None:
+            return "Risk not found", 404
+        
+        #Get the asscoated program
+        riskprogram = Programs.query.filter_by(id=risk.program_id).first()
+
+        form = RiskForm(ifstatement=risk.ifstatement,
+                        thenstatement=risk.thenstatement,
+                        probability=str(risk.probability),
+                        impact=str(risk.impact), 
+                        Program=riskprogram.id)
+
+        if (Programs.query.all() is not None):
+            form.Program.choices = sorted([(program.id, program.name) for program in Programs.query.all()])
+
+        if form.validate_on_submit():
+            # Update the risk in the database
+            risk.ifstatement = form.ifstatement.data
+            risk.thenstatement = form.thenstatement.data
+            risk.probability = form.probability.data
+            risk.impact = form.impact.data
+            risk.program_id = form.Program.data
+
             db.session.commit()
 
             return redirect('/')
+
+        return render_template('riskdetail.html', form=form)
+    else:
+    #It is a new risk
+
+        form= RiskForm()
+
+        if (Programs.query.all() is not None):
+            form.Program.choices = sorted([(program.id, program.name) for program in Programs.query.all()])
     
 
-    # Get mitigations for the risk
-    mitigations = db.session.execute(select(Mitigations).where(Mitigations.risk_id == risk_id)).scalars().all()
+        if form.validate_on_submit():
+            # Create a new risk in the database
+                newrisk = Risks(ifstatement=form.ifstatement.data, thenstatement=form.thenstatement.data, probability=form.probability.data, impact=form.impact.data)
+                db.session.add(newrisk)
+                db.session.commit()
 
-    # Render the edit risk template with the risk and mitigations data
-    form = RiskForm(ifstatement=risk.ifstatement, thenstatement=risk.thenstatement, probability=str(risk.probability), impact=str(risk.impact))
-    if form.validate_on_submit():
-        # Update the risk in the database
-        risk.ifstatement = form.ifstatement.data
-        risk.thenstatement = form.thenstatement.data
-        risk.probability = form.probability.data
-        risk.impact = form.impact.data
-        db.session.commit()
-
-        return redirect('/')
-
-    return render_template('riskdetail.html', form=form)
+                return redirect('/')
+        
+        return render_template('riskdetail.html', form=form)
 
 @risks_bp.route('/riskdata', methods=['GET'])
 def risk_dashboard():
