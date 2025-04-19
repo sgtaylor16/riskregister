@@ -113,6 +113,14 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
     let selector = "#riskrow"+ id
     drawriskBox(100,selector,prob,impact);
 
+    let form = riskrow.append("form")
+            .append("action","/newmit")
+            .attr("method","POST")
+    
+    form.append("button")
+        .attr("type","submit")
+        .text("+Mitigation")
+
     let mitdiv = riskrow.append("div").attr("class","mitigations")
     if (mitigationlist.length > 0){
         mitigationlist.forEach(mitigation => {
