@@ -3,6 +3,7 @@ from forms import RiskForm,MitigationForm,DeleteMitigationForm, newRiskButton
 from dbcode.models import Risks, Mitigations, Programs
 from sqlalchemy import select
 from extensions import db
+from dateutil.parser import parse
 
 
 risks_bp = Blueprint('risks', __name__)
@@ -123,4 +124,27 @@ def edit_mitigation(mitigation_id):
         return redirect('/')
 
     return render_template('editmitigation.html',form=form, deletemitform=deletemitform)
+
+@risks_bp.route('/newmit/<risk_id>', methods=['GET', 'POST'])
+def new_mitigation(risk_id):
+    # Get the risk from the database
+    risk = db.session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
+    if risk is None:
+        return "Risk not found", 404
+
+    # Render the edit risk template with the risk and mitigations data
+    form = MitigationForm()
+    if form.validate_on_submit():
+        # Create a new mitigation in the database
+        newmitigation = Mitigations(description=form.description.data,
+                                     probability=form.probability.data,
+                                     impact=form.impact.data,
+                                     date=parse(form.date.data),
+                                     complete=form.complete.data)
+        risk.mitigations.append(newmitigation)
+        db.session.commit()
+
+        return redirect('/')
+
+    return render_template('newmitigation.html',form=form)
 
