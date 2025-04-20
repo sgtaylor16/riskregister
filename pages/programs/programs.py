@@ -18,23 +18,18 @@ def add_program():
         program = Programs(name=form.name.data, description=form.description.data)
         db.session.add(program)
         db.session.commit()
-        return redirect('/')
-    
-    deleteForm = DeleteProgramForm()
-    deleteForm.program_id.choices = [(program.id, program.name) for program in allprograms]
-    if deleteForm.validate_on_submit():
-        # Delete the program from the database
-        program_id = deleteForm.program_id.data
-        program = db.session.query(Programs).filter(Programs.id == program_id).first()
-        
-        riskscheck = db.session.query(Risks).filter(Risks.program_id == program_id).all()
-        if riskscheck:
-            flash("Cannot delete program with associated risks.")
-            return redirect('/addprograms/')
-        # Delete the program if it exists
-        if program:
-            db.session.delete(program)
-            db.session.commit()
-        return redirect('/')
+        return redirect('/addprograms')
 
-    return render_template('addprogram.html', form=form ,deleteform=deleteForm, records=recordslist)
+    return render_template('addprogram.html', form=form,  records=recordslist)
+
+@programs_bp.route('/deleteprogram/<int:program_id>', methods=['GET', 'POST'])
+def delete_program(program_id):
+    programcheck = db.session.query(Programs).filter(Programs.id == program_id).first().risks
+    if len(programcheck) > 0:
+        flash("Program has asscoiated risks. Cannot delete.")
+        return redirect('/addprograms/')
+    else:
+        program = db.session.query(Programs).filter(Programs.id == program_id).first()
+        db.session.delete(program)
+        db.session.commit()
+        return redirect('/addprograms/')

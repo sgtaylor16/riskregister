@@ -16,8 +16,7 @@ class ProgramForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class DeleteProgramForm(FlaskForm):
-    program_id = SelectField('Program ID', validators=[DataRequired()])
-    submit = SubmitField('Delete Program')
+    submit = SubmitField('Delete')
 
 class MitigationForm(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])

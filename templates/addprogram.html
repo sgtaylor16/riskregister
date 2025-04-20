@@ -18,6 +18,11 @@
             <td>{{ program.id }}</td>
             <td>{{ program.Program }}</td>
             <td>{{ program.Description }}</td>
+            <td>
+                <form action="/deleteprogram/{{program.id}}" method="post">
+                    <input type="submit" value="Delete">
+                </form>
+
         </tr>
         {% endfor %}
     </table>
@@ -30,11 +35,7 @@
         {{ form.description(size=80) }}<br>
         {{ form.submit() }}
     </form>
-    <h1>Delete Program</h1>
-    <form action="" method="post">
-        {{ deleteform.hidden_tag() }}
-        {{ deleteform.program_id() }}<br>
-        {{ deleteform.submit() }}
+    <br>
 
     <a href="/">Back to Top</a>
     

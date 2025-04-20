@@ -24,7 +24,7 @@ class Risks(db.Model):
     person_id: Mapped[int] = mapped_column(ForeignKey('persons.id'),nullable=True)
     person: Mapped['Persons'] = relationship(back_populates="risks")
     program_id: Mapped[int] = mapped_column(ForeignKey('programs.id'))
-    program: Mapped["Programs"] = relationship(back_populates="risk")
+    program: Mapped["Programs"] = relationship(back_populates="risks")
     mitigations: Mapped[List["Mitigations"]] = relationship(back_populates="risk")
 
 class Mitigations(db.Model):
@@ -43,4 +43,4 @@ class Programs(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(100))
     description: Mapped[str] = mapped_column(String(100))
-    risk: Mapped["Risks"] = relationship(back_populates="program")
+    risks: Mapped[List["Risks"]] = relationship(back_populates="program")
