@@ -23,7 +23,7 @@ def add_person():
         return redirect('/')
     
     deleteForm = DeletePersonForm()
-    deleteForm.person_id.choices = [(person.id, person.first_name) for person in allpersons]
+    deleteForm.person_id.choices = [(person.id, person.last_name + ','+ person.first_name) for person in allpersons]
     if deleteForm.validate_on_submit():
         # Delete the person from the database
         person_id = deleteForm.person_id.data
