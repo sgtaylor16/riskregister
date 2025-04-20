@@ -26,7 +26,7 @@ def add_program():
 def delete_program(program_id):
     programcheck = db.session.query(Programs).filter(Programs.id == program_id).first().risks
     if len(programcheck) > 0:
-        flash("Program has asscoiated risks. Cannot delete.")
+        flash("Program has associated risks. Cannot delete.")
         return redirect('/addprograms/')
     else:
         program = db.session.query(Programs).filter(Programs.id == program_id).first()
