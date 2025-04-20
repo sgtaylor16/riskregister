@@ -14,10 +14,12 @@ def create_app():
 
     from pages.risks.risks import risks_bp
     from pages .programs.programs import programs_bp
+    from pages.persons.persons import persons_bp
     from pages.main import index_bp
     flask_app.register_blueprint(index_bp)
     flask_app.register_blueprint(risks_bp)
     flask_app.register_blueprint(programs_bp)
+    flask_app.register_blueprint(persons_bp)
 
     return flask_app
 

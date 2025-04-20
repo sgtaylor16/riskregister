@@ -32,3 +32,12 @@ class DeleteMitigationForm(FlaskForm):
 
 class newRiskButton(FlaskForm):
     submit = SubmitField('New Risk')
+
+class PersonForm(FlaskForm):
+    last_name = StringField('Lasat Name', validators=[DataRequired()])
+    first_name = StringField('First Name', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+class DeletePersonForm(FlaskForm):
+    person_id = SelectField('Person ID', validators=[DataRequired()])
+    submit = SubmitField('Delete Person')
