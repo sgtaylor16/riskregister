@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, jsonify
-from forms import RiskForm,MitigationForm,DeleteMitigationForm, newRiskButton
-from dbcode.models import Risks, Mitigations, Programs
+from forms import RiskForm,MitigationForm,DeleteMitigationForm
+from dbcode.models import Risks, Mitigations, Programs,Persons
 from sqlalchemy import select
 from extensions import db
 from dateutil.parser import parse
@@ -24,15 +24,20 @@ def edit_risk(risk_id):
         
         #Get the asscoated program
         riskprogram = Programs.query.filter_by(id=risk.program_id).first()
+        riskperson = Persons.query.filter_by(id=risk.person_id).first()
 
         form = RiskForm(ifstatement=risk.ifstatement,
                         thenstatement=risk.thenstatement,
                         probability=str(risk.probability),
                         impact=str(risk.impact), 
-                        Program=riskprogram.id)
+                        Program=riskprogram.id,
+                        Person=riskperson.id)
 
-        if (Programs.query.all() is not None):
+        if len(Programs.query.all()) > 0:
             form.Program.choices = sorted([(program.id, program.name) for program in Programs.query.all()])
+
+        if len(Persons.query.all()) > 0:
+            form.Person.choices = sorted([(person.id,person.last_name + " " + person.first_name) for person in Persons.query.all()])
 
         if form.validate_on_submit():
             # Update the risk in the database
@@ -41,6 +46,7 @@ def edit_risk(risk_id):
             risk.probability = form.probability.data
             risk.impact = form.impact.data
             risk.program_id = form.Program.data
+            risk.person_id = form.Person.data
 
             db.session.commit()
 
@@ -55,10 +61,18 @@ def edit_risk(risk_id):
         if (Programs.query.all() is not None):
             form.Program.choices = sorted([(program.id, program.name) for program in Programs.query.all()])
     
+        if len(Persons.query.all()) > 0:
+            form.Person.choices = sorted([(person.id,person.last_name + " " + person.first_name) for person in Persons.query.all()])
 
         if form.validate_on_submit():
             # Create a new risk in the database
-                newrisk = Risks(ifstatement=form.ifstatement.data, thenstatement=form.thenstatement.data, probability=form.probability.data, impact=form.impact.data)
+                newrisk = Risks(ifstatement=form.ifstatement.data,
+                                thenstatement=form.thenstatement.data, 
+                                probability=form.probability.data,
+                                impact=form.impact.data,
+                                person_id=form.Person.data,
+                                program_id=form.Program.data)
+                
                 db.session.add(newrisk)
                 db.session.commit()
 
