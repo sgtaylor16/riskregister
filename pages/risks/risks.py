@@ -93,6 +93,7 @@ def risk_dashboard():
         newob['probability'] = risk.probability
         newob['program'] = risk.program.name
         newob['impact'] = risk.impact
+        newob['person'] = risk.person.last_name + ", " + risk.person.first_name
         mitigationlist = []
         for mitigation in risk.mitigations:
             mitigationlist.append({

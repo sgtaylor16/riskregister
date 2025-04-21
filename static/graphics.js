@@ -93,14 +93,16 @@ export function plotRisk(size,svgselector,prob,impact){
         
 }
 
-export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact,mitigationlist){
+export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact,mitigationlist,person){
     let riskrow = d3.select(element).append("div").attr("class","riskrow")
 
     let idcolumn = riskrow.append("div").attr("class","riskid")
     idcolumn.append('p').append("a").attr('href',"/editrisk/" + id).text(id);
 
     let programcolumn = riskrow.append("div").attr("class","program")
-    programcolumn.append("p").text(program);
+    programcolumn.append("p").text(program)
+    programcolumn.append("br");
+    programcolumn.append("p").text(person);
 
     let ifcolumn = riskrow.append("div").attr("class","ifthen")
     ifcolumn.append("p").text(ifstatement);
