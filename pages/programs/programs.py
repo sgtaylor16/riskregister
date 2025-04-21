@@ -22,6 +22,22 @@ def add_program():
 
     return render_template('addprogram.html', form=form,  records=recordslist)
 
+@programs_bp.route('/editprogram/<int:program_id>', methods=['GET', 'POST'])
+def edit_program(program_id):
+    recordslist = []
+    allprograms = db.session.query(Programs).all()
+    modprogram = db.session.query(Programs).filter(Programs.id == program_id).first()
+    for oneprogram in allprograms:
+        recordslist.append({"id":oneprogram.id, "Program":oneprogram.name, "Description":oneprogram.description})
+    form = ProgramForm(name=modprogram.name, description=modprogram.description)
+    if form.validate_on_submit():
+        # Update the program in the database
+        modprogram.name = form.name.data
+        modprogram.description = form.description.data
+        db.session.commit()
+        return redirect('/addprograms')
+    return render_template('addprogram.html', form=form, records=recordslist)
+
 @programs_bp.route('/deleteprogram/<int:program_id>', methods=['GET', 'POST'])
 def delete_program(program_id):
     programcheck = db.session.query(Programs).filter(Programs.id == program_id).first().risks
