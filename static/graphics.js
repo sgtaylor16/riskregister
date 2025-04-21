@@ -44,7 +44,7 @@ function convertframe(i,j){
     return [i-1,imap[j]];
 }
 
-export function drawriskBox(size,svgselector,prob,impact){
+export function drawriskBox(size,svgselector,prob,impact,plotcircle=true,counts=null){
 
     const width = size;
     const height = size;
@@ -55,6 +55,14 @@ export function drawriskBox(size,svgselector,prob,impact){
                 .append("svg")
                 .attr("width",width)
                 .attr("height",height);
+    console.log(counts)
+    function countselector(counts,i,j){
+        if(counts == null){
+            return null
+        }else{
+            return toString(counts[i][j])
+        }
+    }
 
     for (let i=0;i<5;i++){
         for(let j=0;j<5;j++){
@@ -64,17 +72,26 @@ export function drawriskBox(size,svgselector,prob,impact){
                 .attr("width",cubewidth)
                 .attr("height",cubewidth)
                 .attr('stroke','black')
-                .attr("fill",cubecolor(i,j));
+                .attr("fill",cubecolor(i,j))
+            if(counts != null){
+                svg.append("text")
+                    .attr("x",i*cubewidth + margin + cubewidth/2)
+                    .attr("y",j*cubewidth + margin + cubewidth/2)
+                    .attr("text-anchor","middle")
+                    .attr("font-size",cubewidth/3)
+                    .text(counts[i+1][j+1])
+            }
         }
+        if(plotcircle){
+            let [newprob,newimpact] = convertframe(prob,impact);
+        
+            svg.append("circle")
+                .attr("cx",cubewidth*newprob+ margin + cubewidth/2)
+                .attr("cy",cubewidth*newimpact + margin + cubewidth/2)
+                .attr("r",cubewidth/3)
+                .attr("fill","black")
+            }
     }
-
-    let [newprob,newimpact] = convertframe(prob,impact);
-    
-    svg.append("circle")
-        .attr("cx",cubewidth*newprob+ margin + cubewidth/2)
-        .attr("cy",cubewidth*newimpact + margin + cubewidth/2)
-        .attr("r",cubewidth/3)
-        .attr("fill","black")
 }
 
 export function plotRisk(size,svgselector,prob,impact){

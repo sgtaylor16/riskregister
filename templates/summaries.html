@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Summaries</title>
+
+</head>
+<body>
+    <h1>Risk Summaries</h1>
+    <div id="pig"></div>
+    <script type="module">
+        import { drawriskBox } from '/static/graphics.js';
+
+        fetch('/pigdata')
+            .then(response => response.json())
+            .then(data => {
+                drawriskBox(400,"#pig",1,1,false,data)
+            })
+        
+
+    </script>
+</body>
+</html>

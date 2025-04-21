@@ -16,10 +16,12 @@ def create_app():
     from pages .programs.programs import programs_bp
     from pages.persons.persons import persons_bp
     from pages.main import index_bp
+    from pages.summaries.summaries import summary_bp
     flask_app.register_blueprint(index_bp)
     flask_app.register_blueprint(risks_bp)
     flask_app.register_blueprint(programs_bp)
     flask_app.register_blueprint(persons_bp)
+    flask_app.register_blueprint(summary_bp)
 
     return flask_app
 
