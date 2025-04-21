@@ -34,6 +34,7 @@ export function cubecolor(i,j){
 }
 
 function convertframe(i,j){
+    //function to convert from the 1-5 scale of the risk matrices to the 0-4 scale of the risk cube
     const imap = {
         1:4,
         2:3,
@@ -55,14 +56,7 @@ export function drawriskBox(size,svgselector,prob,impact,plotcircle=true,counts=
                 .append("svg")
                 .attr("width",width)
                 .attr("height",height);
-    console.log(counts)
-    function countselector(counts,i,j){
-        if(counts == null){
-            return null
-        }else{
-            return toString(counts[i][j])
-        }
-    }
+
 
     for (let i=0;i<5;i++){
         for(let j=0;j<5;j++){
@@ -74,14 +68,16 @@ export function drawriskBox(size,svgselector,prob,impact,plotcircle=true,counts=
                 .attr('stroke','black')
                 .attr("fill",cubecolor(i,j))
             if(counts != null){
+                let jconver = {1:5,2:4,3:3,4:2,5:1};
                 svg.append("text")
                     .attr("x",i*cubewidth + margin + cubewidth/2)
                     .attr("y",j*cubewidth + margin + cubewidth/2)
                     .attr("text-anchor","middle")
                     .attr("font-size",cubewidth/3)
-                    .text(counts[i+1][j+1])
+                    .text(counts[i+1][jconver[j+1]])
             }
         }
+    }
         if(plotcircle){
             let [newprob,newimpact] = convertframe(prob,impact);
         
@@ -91,8 +87,8 @@ export function drawriskBox(size,svgselector,prob,impact,plotcircle=true,counts=
                 .attr("r",cubewidth/3)
                 .attr("fill","black")
             }
-    }
 }
+
 
 export function plotRisk(size,svgselector,prob,impact){
 
