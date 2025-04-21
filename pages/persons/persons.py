@@ -20,29 +20,39 @@ def add_person():
         person = Persons(first_name=form.first_name.data, last_name =form.last_name.data)
         db.session.add(person)
         db.session.commit()
-        return redirect('/')
+        return redirect('/addpersons')
     
-    deleteForm = DeletePersonForm()
-    deleteForm.person_id.choices = [(person.id, person.last_name + ','+ person.first_name) for person in allpersons]
-    if deleteForm.validate_on_submit():
-        # Delete the person from the database
-        person_id = deleteForm.person_id.data
+    return render_template('addperson.html', form=form, records=recordslist)
+    
+@persons_bp.route('/editperson/<int:person_id>', methods=['GET', 'POST'])
+def edit_person(person_id):
+    recordslist = []
+    allpersons = db.session.query(Persons).all()
+    modperson = db.session.query(Persons).filter(Persons.id == person_id).first()
+    for oneperson in allpersons:
+        recordslist.append({"id":oneperson.id,
+                             "first_name":oneperson.first_name,
+                             "last_name":oneperson.last_name
+                             })
+    # Create a form instance
+    form = PersonForm(first_name=modperson.first_name, last_name=modperson.last_name)
+    if form.validate_on_submit():
+        # Update the person in the database
+        modperson.first_name = form.first_name.data
+        modperson.last_name = form.last_name.data
+        db.session.commit()
+        return redirect('/addpersons')
+        
+    return render_template('addperson.html', form=form, records=recordslist)
+
+@persons_bp.route('/deleteperson/<int:person_id>', methods=['GET', 'POST'])
+def delete_person(person_id):
+    personcheck = db.session.query(Persons).filter(Persons.id == person_id).first().risks
+    if len(personcheck) > 0:
+        flash("Person has associated risks. Cannot delete.")
+        return redirect('/addpersons/')
+    else:
         person = db.session.query(Persons).filter(Persons.id == person_id).first()
-        
-        personcheck = db.session.query(Risks).filter(Risks.person_id == person_id).all()
-        mitigationcheck = db.session.query(Mitigations).filter(Mitigations.person_id == person_id).all()
-        if personcheck is not None:
-            flash("Cannot delete person with associated risks.")
-            return redirect('/addpersons/')
-        elif mitigationcheck is not None :
-            flash("Cannot delete person with associated mitigations.")
-            return redirect('/addpersons/')
-        else:
-            # Delete the person if it exists
-            if person:
-                db.session.delete(person)
-                db.session.commit()
-        return redirect('/')
-        
-    
-    return render_template('addperson.html', form=form,deleteform =deleteForm, records=recordslist)
+        db.session.delete(person)
+        db.session.commit()
+        return redirect('/addpersons/')

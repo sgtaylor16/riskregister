@@ -15,6 +15,16 @@
             {% for person in records %}
             <tr>
                 <td>{{ person.last_name }}, {{ person.first_name }}</td>
+                <td>
+                    <form action="/deleteperson/{{person.id}}" method="post">
+                        <input type="submit" value="Delete">
+                    </form>
+                </td>
+                <td>
+                    <form action="/editperson/{{person.id}}" method="post">
+                        <input type="submit" value="Update">
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tr>
@@ -25,14 +35,20 @@
         {{ form.first_name.label }}<br>
         {{ form.first_name(size=80) }}<br>
         {{ form.last_name.label }}<br>
-        {{ form.last_name(size=80)}}
+        {{ form.last_name(size=80)}}<br>
         {{ form.submit() }}
     </form>
-    <h1>Delete Person</h1>
-    <form action="" method="post">
-        {{ deleteform.hidden_tag() }}
-        {{ deleteform.person_id() }}<br>
-        {{ deleteform.submit() }}
-    </form>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <br>
+
+    <a href="/">Back to Home</a>"
 </body>
 </html>
