@@ -53,6 +53,12 @@
     <form action="" method="POST">
     {{ riskbutton.submit()}}
     </form>
+    <form action="" method="POST">
+        {{ programsselect.label() }}
+        {{ programsselect.select() }}
+        {{ programsselect.submit() }}
+    </form>
+
     <div id="risklist">
         <div class="riskrow">
             <div>ID</div>
@@ -76,7 +82,5 @@
             riskRow('#risklist',risk.id,risk.ifstatement,risk.thenstatement,risk.program,risk.probability,risk.impact,risk.mitigations,risk.person);
         })
     })
-
-
 </script>
 </html>

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, flash
-from forms import PersonForm, DeletePersonForm
+from forms import PersonForm
 from dbcode.models import Persons, Risks,Mitigations
 from extensions import db
 persons_bp = Blueprint('persons', __name__)
