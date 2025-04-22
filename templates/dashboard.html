@@ -54,12 +54,6 @@
         {{ riskbutton.submit(class="btn btn-primary") }}
     </form>
     <br>
-    <form action="" method="POST">
-        {{ programsselect.hidden_tag() }}
-        {{ programsselect.id() }}
-        {{ programsselect.submit(class="btn btn-secondary") }}
-    </form>
-    <br>
     <label for"programs">Select Programs</label><br>
     <select name="programs" id="programs" multiple>
         {% for program in selected_programs %}

@@ -37,7 +37,3 @@ class PersonForm(FlaskForm):
     last_name = StringField('Last Name', validators=[DataRequired()])
     first_name = StringField('First Name', validators=[DataRequired()])
     submit = SubmitField('Submit')
-
-class filterProgramForm(FlaskForm):
-    id = SelectMultipleField('Programs', choices=[], validators=[DataRequired()])
-    submit = SubmitField('Filter',name='filterprogramsubmit',id='filterprogramsubmit')
