@@ -87,11 +87,22 @@
         })
     })
     document.getElementById("refresh").addEventListener("click", function() {
+        let selectedprograms= document.getElementById("programs").selectedOptions;
+        selectedprograms = Array.from(selectedprograms).map(option => option.value);
+        console.log(selectedprograms);
         let oldrows = document.getElementsByClassName("riskrow")
+        // Remove all old rows`
         while (oldrows.length > 0) {
             oldrows[0].parentNode.removeChild(oldrows[0]);
         }
-        fetch("/riskdata?programs=" + document.getElementById("programs").value)
+        // Send the request to the server
+        fetch("/riskdata?programs=" + document.getElementById("programs").value,{
+            method: "POST",
+            body: JSON.stringify(selectedprograms),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
         .then(response => response.json())
         .then(data => {
             data.forEach(risk => {
