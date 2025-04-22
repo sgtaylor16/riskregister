@@ -26,10 +26,9 @@ def dashboard():
     programsselect = filterProgramForm()
     programs = db.session.execute(select(Programs)).scalars().all()
     programsselect.id.choices = [(program.id, program.name) for program in programs]
+    selected_programs =  [(program.id, program.name) for program in programs]
     if programsselect.validate_on_submit() and ('filterprogramsubmit' in request.form):
-        print("In Program Select")
         selected_programs = programsselect.id.data
-        print(selected_programs)
             
 
-    return render_template("dashboard.html", riskbutton=newriskform, programsselect=programsselect)
+    return render_template("dashboard.html", riskbutton=newriskform, programsselect=programsselect, selected_programs=selected_programs)

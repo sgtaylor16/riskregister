@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, jsonify
+from flask import Blueprint, render_template, redirect, jsonify, request
 from forms import RiskForm,MitigationForm,DeleteMitigationForm
 from dbcode.models import Risks, Mitigations, Programs,Persons
 from sqlalchemy import select
@@ -82,9 +82,14 @@ def edit_risk(risk_id):
 
 @risks_bp.route('/riskdata', methods=['GET'])
 def risk_dashboard():
-    # This route function will be called via fetch when the user accesses the risk dashboard
-    risks = db.session.execute(select(Risks)).scalars().all()
+    selected = request.args.get('programs')
+    print(selected)
     listofrisks = []
+    if selected is None:
+        # This route function will be called via fetch when the user accesses the risk dashboard
+        risks = db.session.execute(select(Risks)).scalars().all()
+    else:
+        risks =db.session.execute(select(Risks).where(Risks.program_id.in_(selected.split(',')))).scalars().all()
     for risk in risks:
         newob = {}
         newob['id'] = risk.id
@@ -109,6 +114,8 @@ def risk_dashboard():
 
         listofrisks.append(newob)
     return jsonify(listofrisks)
+
+
 
 @risks_bp.route('/editmit/<mitigation_id>', methods=['GET', 'POST'])
 def edit_mitigation(mitigation_id):

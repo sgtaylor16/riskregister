@@ -59,6 +59,16 @@
         {{ programsselect.id() }}
         {{ programsselect.submit(class="btn btn-secondary") }}
     </form>
+    <br>
+    <label for"programs">Select Programs</label><br>
+    <select name="programs" id="programs" multiple>
+        {% for program in selected_programs %}
+            <option value="{{ program[0] }}">{{ program[1] }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <button id="refresh" type="button">Refresh</button>
+
 
     <div id="risklist">
         <div class="riskrow">
@@ -75,7 +85,6 @@
 </body>
 <script type ="module">
     import {riskRow} from "/static/graphics.js";
-    
     fetch("/riskdata")
     .then(response => response.json())
     .then(data => {
@@ -83,5 +92,18 @@
             riskRow('#risklist',risk.id,risk.ifstatement,risk.thenstatement,risk.program,risk.probability,risk.impact,risk.mitigations,risk.person);
         })
     })
+    document.getElementById("refresh").addEventListener("click", function() {
+        let oldrows = document.getElementsByClassName("riskrow")
+        while (oldrows.length > 0) {
+            oldrows[0].parentNode.removeChild(oldrows[0]);
+        }
+        fetch("/riskdata?programs=" + document.getElementById("programs").value)
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(risk => {
+                riskRow('#risklist',risk.id,risk.ifstatement,risk.thenstatement,risk.program,risk.probability,risk.impact,risk.mitigations,risk.person);
+            })
+        })
+    });
 </script>
 </html>
