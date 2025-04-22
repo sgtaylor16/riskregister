@@ -31,7 +31,7 @@ class DeleteMitigationForm(FlaskForm):
     submit = SubmitField('Delete Mitigation')
 
 class newRiskButton(FlaskForm):
-    submit = SubmitField('New Risk')
+    submit = SubmitField('New Risk',name='newrisksubmit', id='newrisksubmit')
 
 class PersonForm(FlaskForm):
     last_name = StringField('Last Name', validators=[DataRequired()])
@@ -40,4 +40,4 @@ class PersonForm(FlaskForm):
 
 class filterProgramForm(FlaskForm):
     id = SelectMultipleField('Programs', choices=[], validators=[DataRequired()])
-    submit = SubmitField('Filter')
+    submit = SubmitField('Filter',name='filterprogramsubmit',id='filterprogramsubmit')

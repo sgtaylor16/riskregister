@@ -50,12 +50,14 @@
 <body>
     <h1>Risk Dashboard</h1>
     <form action="" method="POST">
-    {{ riskbutton.submit()}}
+        {{riskbutton.hidden_tag()}}
+        {{ riskbutton.submit(class="btn btn-primary") }}
     </form>
     <br>
     <form action="" method="POST">
+        {{ programsselect.hidden_tag() }}
         {{ programsselect.id() }}
-        {{ programsselect.submit() }}
+        {{ programsselect.submit(class="btn btn-secondary") }}
     </form>
 
     <div id="risklist">

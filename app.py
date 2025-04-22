@@ -9,6 +9,7 @@ def create_app():
     flask_app = Flask(__name__)
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{flask_app.root_path}/dbcode/riskregister.db"
     flask_app.secret_key = secrets.token_urlsafe(16)
+    flask_app.config['programid_select'] = []
 
     db.init_app(flask_app)
 
