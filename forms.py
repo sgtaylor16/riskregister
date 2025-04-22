@@ -39,5 +39,5 @@ class PersonForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class filterProgramForm(FlaskForm):
-    programs = SelectMultipleField('Programs', choices=[], validators=[DataRequired()])
+    id = SelectMultipleField('Programs', choices=[], validators=[DataRequired()])
     submit = SubmitField('Filter')

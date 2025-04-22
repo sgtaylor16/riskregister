@@ -22,6 +22,6 @@ def dashboard():
 
     programsselect = filterProgramForm()
     programs = db.session.execute(select(Programs)).scalars().all()
-    programsselect.choices = [(program.id, program.name) for program in programs]    
+    programsselect.id.choices = [(program.id, program.name) for program in programs]    
 
     return render_template("dashboard.html", riskbutton=newriskform, programsselect=programsselect)

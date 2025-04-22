@@ -45,7 +45,6 @@
             padding-top: 20px;
             border-collapse:collapse;
         }
-        
     </style>
 </head>
 <body>
@@ -53,9 +52,9 @@
     <form action="" method="POST">
     {{ riskbutton.submit()}}
     </form>
+    <br>
     <form action="" method="POST">
-        {{ programsselect.label() }}
-        {{ programsselect.select() }}
+        {{ programsselect.id() }}
         {{ programsselect.submit() }}
     </form>
 
