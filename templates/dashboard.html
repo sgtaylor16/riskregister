@@ -55,12 +55,30 @@
         {{ riskbutton.submit(class="btn btn-primary") }}
     </form>
     <br>
-    <label for"programs">Select Programs</label><br>
+    <div class="dropdown">
+        <button class="btn btn-success droppdown-toggle"
+                 type="button" id="dropdownMenuButton"
+                 data-bs-toggle="dropdown"
+                 aria-expanded="false">
+            Select Programs
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            {% for program in selected_programs %}
+                <li>
+                    <label>
+                        <input type="checkbox" name="programs" value="{{ program[0] }}" >
+                        {{ program[1] }}
+                    </label>
+                </li>
+            {% endfor %}
+    </div>
+
+    <!-- <label for"programs">Select Programs</label><br>
     <select name="programs" id="programs" multiple>
         {% for program in selected_programs %}
             <option value="{{ program[0] }}">{{ program[1] }}</option>
         {% endfor %}
-    </select>
+    </select> -->
     <br>
     <button id="refresh" type="button">Refresh</button>
 
@@ -88,8 +106,19 @@
         })
     })
     document.getElementById("refresh").addEventListener("click", function() {
-        let selectedprograms= document.getElementById("programs").selectedOptions;
-        selectedprograms = Array.from(selectedprograms).map(option => option.value);
+
+        let dropdowndiv = document.querySelector(".dropdown-menu");
+        let checkboxes = dropdowndiv.querySelectorAll("input[type='checkbox']");
+        let selectedprograms = [];
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                selectedprograms.push(parseInt(checkbox.value));
+            }
+        });
+        console.log(selectedprograms);
+
+        //let selectedprograms= document.getElementById("programs").selectedOptions;
+        //selectedprograms = Array.from(selectedprograms).map(option => option.value);
         console.log(selectedprograms);
         let oldrows = document.getElementsByClassName("riskrow")
         console.log(JSON.stringify(selectedprograms))
