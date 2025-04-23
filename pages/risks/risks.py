@@ -83,12 +83,14 @@ def edit_risk(risk_id):
 @risks_bp.route('/riskdata', methods=['GET'])
 def risk_dashboard():
     selected = request.args.get('programs')
-    print(selected)
+
     listofrisks = []
     if selected is None:
         # This route function will be called via fetch when the user accesses the risk dashboard
         risks = db.session.execute(select(Risks)).scalars().all()
     else:
+        newwelected = request.get_json()
+        print(newwelected)
         risks =db.session.execute(select(Risks).where(Risks.program_id.in_(selected.split(',')))).scalars().all()
     for risk in risks:
         newob = {}
