@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template,redirect, request
 from forms import newRiskButton
 from sqlalchemy import select, func
-from dbcode.models import Risks, Programs
+from dbcode.models import Risks, Programs, Persons
 from extensions import db
 
 index_bp = Blueprint('index',__name__)
@@ -16,6 +16,9 @@ def dashboard():
     programs = db.session.execute(select(Programs)).scalars().all()
     selected_programs =  [(program.id, program.name) for program in programs]
 
+    persons = db.session.execute(select(Persons)).scalars().all()
+    selected_persons =  [(person.id, person.last_name + ', ' + person.first_name) for person in persons]
+
     if newriskform.validate_on_submit() and ('newrisksubmit' in request.form):
         print('In Here')
         # Handle the new risk button submission
@@ -25,4 +28,4 @@ def dashboard():
         return redirect(f'/editrisk/{max_id}')
 
         
-    return render_template("dashboard.html", riskbutton=newriskform, selected_programs=selected_programs)
+    return render_template("dashboard.html", riskbutton=newriskform, selected_programs=selected_programs,selected_persons=selected_persons)

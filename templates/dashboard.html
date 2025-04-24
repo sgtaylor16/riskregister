@@ -46,6 +46,16 @@
             padding-top: 20px;
             border-collapse:collapse;
         }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-buttons .dropdown {
+            flex:1;
+        }
     </style>
 </head>
 <body>
@@ -55,7 +65,8 @@
         {{ riskbutton.submit(class="btn btn-primary") }}
     </form>
     <br>
-    <div class="dropdown">
+    <div class="filter-buttons">
+        <div class="dropdown" id="programs_filter">
         <button class="btn btn-success droppdown-toggle"
                  type="button" id="dropdownMenuButton"
                  data-bs-toggle="dropdown"
@@ -66,11 +77,30 @@
             {% for program in selected_programs %}
                 <li>
                     <label>
-                        <input type="checkbox" name="programs" value="{{ program[0] }}" >
+                        <input type="checkbox" name="programs" value="{{ program[0] }}" checked >
                         {{ program[1] }}
                     </label>
                 </li>
             {% endfor %}
+        </div>
+        <div class="dropdown" id="person_filter">
+        <button class="btn btn-success droppdown-toggle"
+                 type="button" id="dropdownMenuButton"
+                 data-bs-toggle="dropdown"
+                 aria-expanded="false">
+            Select Person
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            {% for person in selected_persons %}
+                <li>
+                    <label>
+                        <input type="checkbox" name="persons" value="{{ person[0] }}" checked>
+                        {{ person[1] }}
+                    </label>
+                </li>
+            {% endfor %}
+        </ul>
+        </div>
     </div>
 
     <!-- <label for"programs">Select Programs</label><br>
