@@ -4,6 +4,7 @@ from dbcode.models import Risks, Mitigations, Programs,Persons
 from sqlalchemy import select
 from extensions import db
 from dateutil.parser import parse
+from typing import List, Dict
 
 
 risks_bp = Blueprint('risks', __name__)
@@ -80,7 +81,7 @@ def edit_risk(risk_id):
         
         return render_template('riskdetail.html', form=form)
 
-def buildrisklist(risks):
+def buildrisklist(risks: List[Risks]) -> List[Dict]:
     # This function will be called to build the list of risks for the risk dashboard
     # It takes a list of risks and returns a list of dictionaries with the risk data
     listofrisks = []
@@ -126,8 +127,6 @@ def risk_dashboard():
         listofrisks = buildrisklist(risks)
     
     return jsonify(listofrisks)
-
-
 
 @risks_bp.route('/editmit/<mitigation_id>', methods=['GET', 'POST'])
 def edit_mitigation(mitigation_id):

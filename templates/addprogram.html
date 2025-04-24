@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Programs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style>
         table {
             border-collapse: collapse
@@ -30,12 +31,12 @@
             <td>{{ program.Description }}</td>
             <td>
                 <form action="/deleteprogram/{{program.id}}" method="post">
-                    <input type="submit" value="Delete">
+                    <input type="submit" value="Delete" class="btn btn-warning">
                 </form>
             </td>
             <td>
                 <form action="/editprogram/{{program.id}}" method="post">
-                    <input type="submit" value="Update">
+                    <input type="submit" value="Update" class="btn btn-primary">
                 </form>
         </tr>
         {% endfor %}
@@ -47,7 +48,7 @@
         {{ form.name(size=80) }}<br>
         {{ form.description.label }}<br>
         {{ form.description(size=80) }}<br>
-        {{ form.submit() }}
+        {{ form.submit(class="btn btn-primary") }}
     </form>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -61,6 +62,6 @@
     <br>
 
     <a href="/">Back to Top</a>
-    
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>
