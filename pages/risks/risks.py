@@ -5,6 +5,7 @@ from sqlalchemy import select
 from extensions import db
 from dateutil.parser import parse
 from typing import List, Dict
+from misctools import score
 
 
 risks_bp = Blueprint('risks', __name__)
@@ -81,6 +82,7 @@ def edit_risk(risk_id):
         
         return render_template('riskdetail.html', form=form)
 
+
 def buildrisklist(risks: List[Risks]) -> List[Dict]:
     # This function will be called to build the list of risks for the risk dashboard
     # It takes a list of risks and returns a list of dictionaries with the risk data
@@ -94,6 +96,7 @@ def buildrisklist(risks: List[Risks]) -> List[Dict]:
         newob['program'] = risk.program.name
         newob['impact'] = risk.impact
         newob['person'] = risk.person.last_name + ", " + risk.person.first_name
+        newob['score'] = score(risk.probability,risk.impact)
         mitigationlist = []
         for mitigation in risk.mitigations:
             mitigationlist.append({
@@ -104,10 +107,13 @@ def buildrisklist(risks: List[Risks]) -> List[Dict]:
                 'date': mitigation.date.strftime('%Y-%m-%d'),
                 'complete': mitigation.complete
             })
+        # Sort the mitigation list by date
+        mitigationlist.sort(key=lambda x: x['date'])
         newob['mitigations'] = mitigationlist
 
-
         listofrisks.append(newob)
+    # Sort the list of risks by score
+    listofrisks.sort(key=lambda x: x['score'], reverse=True)
     return listofrisks
 
 @risks_bp.route('/riskdata', methods=['POST','GET'])
@@ -138,11 +144,11 @@ def edit_mitigation(mitigation_id):
     # Render the edit risk template with the risk and mitigations data
     form = MitigationForm(description=mitigation.description, probability=str(mitigation.probability), impact=str(mitigation.impact), date=mitigation.date.strftime('%Y-%m-%d'), complete=str(mitigation.complete))
     if form.validate_on_submit():
-        # Update the risk in the database
-        mitigation.ifstatement = form.ifstatement.data
-        mitigation.thenstatement = form.thenstatement.data
+        # Update the mitigation in the database
+        mitigation.description = form.description.data
         mitigation.probability = form.probability.data
         mitigation.impact = form.impact.data
+        mitigation.date = parse(form.date.data)
         mitigation.complete = form.complete.data
         db.session.commit()
 
