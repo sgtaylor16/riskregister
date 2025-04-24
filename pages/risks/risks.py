@@ -80,11 +80,9 @@ def edit_risk(risk_id):
         
         return render_template('riskdetail.html', form=form)
 
-risks_bp.route('/riskdata0',methods = ['POST','GET'])
-def risk_dashboard0():
-    print("I'm in riskdata0")
-    # This route function will be called via fetch when the user accesses the risk dashboard
-    risks = db.session.execute(select(Risks)).scalars().all()
+def buildrisklist(risks):
+    # This function will be called to build the list of risks for the risk dashboard
+    # It takes a list of risks and returns a list of dictionaries with the risk data
     listofrisks = []
     for risk in risks:
         newob = {}
@@ -109,48 +107,24 @@ def risk_dashboard0():
 
 
         listofrisks.append(newob)
-    return jsonify(listofrisks)
+    return listofrisks
 
 @risks_bp.route('/riskdata', methods=['POST','GET'])
 def risk_dashboard():
-    print("in Here")
-    #selected = request.args.get('programs')
-    newselected = request.get_json()['programs']
-    print(newselected)
 
-
-    if len(newselected) == 0:
+    if request.method== 'GET':
         # This route function will be called via fetch when the user accesses the risk dashboard
         risks = db.session.execute(select(Risks)).scalars().all()
-        listofrisks = risks
+        listofrisks = buildrisklist(risks)
     else:
+
+        #selected = request.args.get('programs')
+        newselected = request.get_json()['programs']
         listofrisks = []
 
-        print(newselected)
         risks =db.session.execute(select(Risks).where(Risks.program_id.in_(newselected))).scalars().all()
-    for risk in risks:
-        newob = {}
-        newob['id'] = risk.id
-        newob['ifstatement'] = risk.ifstatement
-        newob['thenstatement'] = risk.thenstatement
-        newob['probability'] = risk.probability
-        newob['program'] = risk.program.name
-        newob['impact'] = risk.impact
-        newob['person'] = risk.person.last_name + ", " + risk.person.first_name
-        mitigationlist = []
-        for mitigation in risk.mitigations:
-            mitigationlist.append({
-                'id': mitigation.id,
-                'description': mitigation.description,
-                'probability': mitigation.probability,
-                'impact': mitigation.impact,
-                'date': mitigation.date.strftime('%Y-%m-%d'),
-                'complete': mitigation.complete
-            })
-        newob['mitigations'] = mitigationlist
-
-
-        listofrisks.append(newob)
+        listofrisks = buildrisklist(risks)
+    
     return jsonify(listofrisks)
 
 
