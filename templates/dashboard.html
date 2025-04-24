@@ -98,7 +98,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script type ="module">
     import {riskRow} from "/static/graphics.js";
-    fetch("/riskdata")
+    fetch("/riskdata0")
     .then(response => response.json())
     .then(data => {
         data.forEach(risk => {
@@ -116,23 +116,27 @@
             }
         });
         console.log(selectedprograms);
+        let prog_ob = {
+            "programs": selectedprograms
+        }
 
         //let selectedprograms= document.getElementById("programs").selectedOptions;
         //selectedprograms = Array.from(selectedprograms).map(option => option.value);
         console.log(selectedprograms);
         let oldrows = document.getElementsByClassName("riskrow")
-        console.log(JSON.stringify(selectedprograms))
+        console.log(JSON.stringify(prog_ob))
         // Remove all old rows`
         while (oldrows.length > 0) {
             oldrows[0].parentNode.removeChild(oldrows[0]);
         }
         // Send the request to the server
-        fetch("/riskdata?programs=" + document.getElementById("programs").value,{
+        fetch("/riskdata",{
             method: "POST",
-            body: JSON.stringify(selectedprograms),
-            headers: {
-                "Content-Type": "application/json"
-            }
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(prog_ob),
         })
         .then(response => response.json())
         .then(data => {
