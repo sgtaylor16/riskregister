@@ -45,6 +45,47 @@ function convertframe(i,j){
     return [i-1,imap[j]];
 }
 
+class RiskCube{
+    constructor(size,selector){
+        this.size = size;
+        this.selector = selector;
+    }
+    draw(){
+        const width = this.size;
+        const height = this.size;
+        const margin = 10;
+        const cubewidth = (width - 2*margin)/5;
+
+        const svg = d3.select(this.selector)
+                    .append("svg")
+                    .attr("width",width)
+                    .attr("height",height);
+
+        for (let i=0;i<5;i++){
+            for(let j=0;j<5;j++){
+                svg.append("rect")
+                    .attr("x",i*cubewidth + margin)
+                    .attr("y",j*cubewidth + margin)
+                    .attr("width",cubewidth)
+                    .attr("height",cubewidth)
+                    .attr('stroke','black')
+                    .attr("fill",cubecolor(i,j))
+            }
+        }
+        this.cubesvg = svg;
+    }
+    plotpoint(prob,impact){
+        //function to plot the point on the risk cube
+        //prob is the probability and impact is the impact
+        let [newprob,newimpact] = convertframe(prob,impact);
+    
+        this.cubesvg.append("circle")
+            .attr("cx",cubewidth*newprob+ margin + cubewidth/2)
+            .attr("cy",cubewidth*newimpact + margin + cubewidth/2)
+            .attr("r",cubewidth/3)
+            .attr("fill","black")}
+}
+
 export function drawriskBox(size,svgselector,prob,impact,plotcircle=true,counts=null){
 
     const width = size;
