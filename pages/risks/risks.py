@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, jsonify, request
 from forms import RiskForm,MitigationForm,DeleteMitigationForm
 from dbcode.models import Risks, Mitigations, Programs,Persons
-from sqlalchemy import select
+from sqlalchemy import select, and_
 from extensions import db
 from dateutil.parser import parse
 from typing import List, Dict
@@ -126,9 +126,10 @@ def risk_dashboard():
     else:
 
         newselected_prog = request.get_json()['programs']
+        newselected_persons = request.get_json()['persons']
         listofrisks = []
 
-        risks =db.session.execute(select(Risks).where(Risks.program_id.in_(newselected_prog))).scalars().all()
+        risks =db.session.execute(select(Risks).where(and_(Risks.program_id.in_(newselected_prog),Risks.person_id.in_(newselected_persons)))).scalars().all()
         listofrisks = buildrisklist(risks)
     
     return jsonify(listofrisks)
