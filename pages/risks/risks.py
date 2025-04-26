@@ -125,11 +125,10 @@ def risk_dashboard():
         listofrisks = buildrisklist(risks)
     else:
 
-        #selected = request.args.get('programs')
-        newselected = request.get_json()['programs']
+        newselected_prog = request.get_json()['programs']
         listofrisks = []
 
-        risks =db.session.execute(select(Risks).where(Risks.program_id.in_(newselected))).scalars().all()
+        risks =db.session.execute(select(Risks).where(Risks.program_id.in_(newselected_prog))).scalars().all()
         listofrisks = buildrisklist(risks)
     
     return jsonify(listofrisks)

@@ -73,7 +73,7 @@
                  aria-expanded="false">
             Select Programs
         </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="dropdown-menu-prog">
             {% for program in selected_programs %}
                 <li>
                     <label>
@@ -82,6 +82,7 @@
                     </label>
                 </li>
             {% endfor %}
+        </ul>
         </div>
         <div class="dropdown" id="person_filter">
         <button class="btn btn-success droppdown-toggle"
@@ -90,11 +91,11 @@
                  aria-expanded="false">
             Select Person
         </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="dropdown-menu-person">
             {% for person in selected_persons %}
                 <li>
                     <label>
-                        <input type="checkbox" name="persons" value="{{ person[0] }}" checked>
+                        <input type="checkbox" name="programs" value="{{ person[0] }}" checked >
                         {{ person[1] }}
                     </label>
                 </li>
@@ -139,17 +140,27 @@
     })
     document.getElementById("refresh").addEventListener("click", function() {
 
-        let dropdowndiv = document.querySelector(".dropdown-menu");
-        let checkboxes = dropdowndiv.querySelectorAll("input[type='checkbox']");
+        let dropdowndivprog = document.querySelector("#dropdown-menu-prog");
+        let checkboxesprog = dropdowndivprog.querySelectorAll("input[type='checkbox']");
         let selectedprograms = [];
-        checkboxes.forEach(checkbox => {
+        checkboxesprog.forEach(checkbox => {
             if (checkbox.checked) {
                 selectedprograms.push(parseInt(checkbox.value));
             }
         });
+
+        let dropdowndivperson = document.querySelector("#dropdown-menu-person");
+        let checkboxesperson = dropdowndivperson.querySelectorAll("input[type='checkbox']");
+        let selectedpersons = [];
+        checkboxesperson.forEach(checkbox => {
+            if (checkbox.checked) {
+                selectedpersons.push(parseInt(checkbox.value));
+            }
+        });
         console.log(selectedprograms);
         let prog_ob = {
-            "programs": selectedprograms
+            "programs": selectedprograms,
+            "persons": selectedpersons
         }
 
         //let selectedprograms= document.getElementById("programs").selectedOptions;
