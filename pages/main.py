@@ -20,7 +20,6 @@ def dashboard():
     selected_persons =  [(person.id, person.last_name + ', ' + person.first_name) for person in persons]
 
     if newriskform.validate_on_submit() and ('newrisksubmit' in request.form):
-        print('In Here')
         # Handle the new risk button submission
         maxid_query = db.session.query(func.max(Risks.id)).all()
         max_id = maxid_query[0][0]+1
