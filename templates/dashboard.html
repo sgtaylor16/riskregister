@@ -150,17 +150,11 @@
                 selectedpersons.push(parseInt(checkbox.value));
             }
         });
-        console.log(selectedprograms);
         let prog_ob = {
             "programs": selectedprograms,
             "persons": selectedpersons
         }
-
-        //let selectedprograms= document.getElementById("programs").selectedOptions;
-        //selectedprograms = Array.from(selectedprograms).map(option => option.value);
-        console.log(selectedprograms);
         let oldrows = document.getElementsByClassName("riskrow")
-        console.log(JSON.stringify(prog_ob))
         // Remove all old rows`
         while (oldrows.length > 0) {
             oldrows[0].parentNode.removeChild(oldrows[0]);

@@ -105,20 +105,25 @@ export class RiskCube{
 
         this.cubesvg.append("text")
             .attr("x",xpt)
-            .attr("y",ypt)
+            .attr("y",ypt + this.cubewidth/4)
             .attr("text-anchor","middle")
-            .attr("font-size",cubewidth/3)
+            .attr("font-size",this.cubewidth/1.2)
             .text(text)
     }
 }
 
-export function drawriskBox(size,svgselector,prob,impact,plotcircle=true,counts=null){
+export function drawriskBox(size,svgselector,prob,impact,mitigationlist,plotcircle=true,counts=null){
 
     let onecube = new RiskCube(size,svgselector)
     onecube.draw();
 
     if(plotcircle){
         onecube.plotpoint(prob,impact);
+    }
+    if(mitigationlist.length > 0){
+        mitigationlist.forEach(mitigation => {
+            onecube.plottext(mitigation.probability,mitigation.impact,mitigation.id);
+        })
     }
 }
 
@@ -142,7 +147,7 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
     riskrow.append("div").attr("class","riskcube").attr("id","riskrow"+id);
 
     let selector = "#riskrow"+ id
-    drawriskBox(100,selector,prob,impact);
+    drawriskBox(100,selector,prob,impact,mitigationlist);
 
     let form = riskrow.append("form")
             .attr("action","/newmit/" + id)
