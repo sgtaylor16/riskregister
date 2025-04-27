@@ -45,11 +45,25 @@ function convertframe(i,j){
     return [i-1,imap[j]];
 }
 
-class RiskCube{
-    constructor(size,selector){
+export class RiskCube{
+    constructor(size,selector,margin=10){
         this.size = size;
         this.selector = selector;
+        this.margin = margin;
+        this.cubewidth = size - 2*margin
     }
+    coordinates(prob,impact){
+        //function to conver probability and impact "coordinates" to screen coordinates
+        //inputs are on 1-5 scale
+        if(prob < 1 || prob > 5 || impact < 1 || impact > 5){
+            throw new Error("probability and impact must be between 1 and 5");
+        }
+        cubewidth = (this.size - 2*this.margin)/5;
+        xpt = (prob - 1)*cubewidth + this.margin + cubewidth/2;
+        ypt = (5 - impact)*cubewidth + this.margin + cubewidth/2;
+        return [xpt,ypt];
+    }
+
     draw(){
         const width = this.size;
         const height = this.size;
@@ -77,13 +91,26 @@ class RiskCube{
     plotpoint(prob,impact){
         //function to plot the point on the risk cube
         //prob is the probability and impact is the impact
-        let [newprob,newimpact] = convertframe(prob,impact);
-    
+        let [xpt,ypt] = this.coordinates(prob,impact);
+
         this.cubesvg.append("circle")
-            .attr("cx",cubewidth*newprob+ margin + cubewidth/2)
-            .attr("cy",cubewidth*newimpact + margin + cubewidth/2)
+            .attr("cx",xpt)
+            .attr("cy",ypt)
             .attr("r",cubewidth/3)
-            .attr("fill","black")}
+            .attr("fill","black")
+        }
+    plottext(prob,impact,text){
+        //function to plot the text on the risk cube
+        //prob is the probability and impact is the impact
+        let [xpt,ypt] = this.coordinates(prob,impact);
+
+        this.cubesvg.append("text")
+            .attr("x",xpt)
+            .attr("y",ypt)
+            .attr("text-anchor","middle")
+            .attr("font-size",cubewidth/3)
+            .text(text)
+    }
 }
 
 export function drawriskBox(size,svgselector,prob,impact,plotcircle=true,counts=null){
