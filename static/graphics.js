@@ -50,7 +50,7 @@ export class RiskCube{
         this.size = size;
         this.selector = selector;
         this.margin = margin;
-        this.cubewidth = size - 2*margin
+        this.cubewidth = (size - 2*margin)/5;
     }
     coordinates(prob,impact){
         //function to conver probability and impact "coordinates" to screen coordinates
@@ -58,9 +58,8 @@ export class RiskCube{
         if(prob < 1 || prob > 5 || impact < 1 || impact > 5){
             throw new Error("probability and impact must be between 1 and 5");
         }
-        cubewidth = (this.size - 2*this.margin)/5;
-        xpt = (prob - 1)*cubewidth + this.margin + cubewidth/2;
-        ypt = (5 - impact)*cubewidth + this.margin + cubewidth/2;
+        const xpt = (prob - 1)*this.cubewidth + this.margin + this.cubewidth/2;
+        const ypt = (5 - impact)*this.cubewidth + this.margin + this.cubewidth/2;
         return [xpt,ypt];
     }
 
@@ -96,7 +95,7 @@ export class RiskCube{
         this.cubesvg.append("circle")
             .attr("cx",xpt)
             .attr("cy",ypt)
-            .attr("r",cubewidth/3)
+            .attr("r",this.cubewidth/3)
             .attr("fill","black")
         }
     plottext(prob,impact,text){
@@ -115,63 +114,12 @@ export class RiskCube{
 
 export function drawriskBox(size,svgselector,prob,impact,plotcircle=true,counts=null){
 
-    const width = size;
-    const height = size;
-    const margin = 10;
-    const cubewidth = (width - 2*margin)/5;
+    let onecube = new RiskCube(size,svgselector)
+    onecube.draw();
 
-    const svg = d3.select(svgselector)
-                .append("svg")
-                .attr("width",width)
-                .attr("height",height);
-
-
-    for (let i=0;i<5;i++){
-        for(let j=0;j<5;j++){
-            svg.append("rect")
-                .attr("x",i*cubewidth + margin)
-                .attr("y",j*cubewidth + margin)
-                .attr("width",cubewidth)
-                .attr("height",cubewidth)
-                .attr('stroke','black')
-                .attr("fill",cubecolor(i,j))
-            if(counts != null){
-                let jconver = {1:5,2:4,3:3,4:2,5:1};
-                svg.append("text")
-                    .attr("x",i*cubewidth + margin + cubewidth/2)
-                    .attr("y",j*cubewidth + margin + cubewidth/2)
-                    .attr("text-anchor","middle")
-                    .attr("font-size",cubewidth/3)
-                    .text(counts[i+1][jconver[j+1]])
-            }
-        }
+    if(plotcircle){
+        onecube.plotpoint(prob,impact);
     }
-        if(plotcircle){
-            let [newprob,newimpact] = convertframe(prob,impact);
-        
-            svg.append("circle")
-                .attr("cx",cubewidth*newprob+ margin + cubewidth/2)
-                .attr("cy",cubewidth*newimpact + margin + cubewidth/2)
-                .attr("r",cubewidth/3)
-                .attr("fill","black")
-            }
-}
-
-
-export function plotRisk(size,svgselector,prob,impact){
-
-    const width = size;
-    const height = size;
-    const margin = 10;
-
-    const cubewidth = (width - 2*margin)/5;
-
-    drawriskBox(size,svgselector);
-
-    const svg = d3.select(svgselector)
-                .select("svg");
-
-        
 }
 
 export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact,mitigationlist,person){
