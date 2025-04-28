@@ -22,6 +22,15 @@ def pigcount():
 def summary():
     return render_template('summaries.html')
 
+@summary_bp.route('/waterfalldata/{risk_id}')
+def waterfalldata(risk_id):
+    risk = db.session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
+    startprob = risk.probability
+    startimpact = risk.impact
+    startdate = risk.start_date
+def waterfall():
+
+
 
 
  
