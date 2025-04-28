@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect
-from dbcode.dbtools import Risks
+from dbcode.dbtools import Risks, Mitigation
 from extensions import db
 import pandas as pd
 from sqlalchemy import select
@@ -24,11 +24,17 @@ def summary():
 
 @summary_bp.route('/waterfalldata/{risk_id}')
 def waterfalldata(risk_id):
+    wflist = []
     risk = db.session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
     startprob = risk.probability
     startimpact = risk.impact
-    startdate = risk.start_date
-def waterfall():
+    startdate = risk.date
+    wflist.append({'date': startdate, 'probability': startprob, 'impact': startimpact,'complete': 0})
+    mitigations = db.session.execute(select(Mitigation).where(Mitigation.risk_id == risk_id)).scalars().all()
+    for mitigation in mitigations:
+        wflist.append({'date': mitigation.date, 'probability': mitigation.probability, 'impact': mitigation.impact,'complete': mitigation.complete})
+    return wflist.to_json()
+
 
 
 
