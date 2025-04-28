@@ -127,6 +127,19 @@ export function drawriskBox(size,svgselector,prob,impact,mitigationlist,plotcirc
     }
 }
 
+export function pigSummary(size,svgselector,counts){
+
+    let onecube = new RiskCube(size,svgselector)
+    onecube.draw();
+    for (let prob=1;prob<6;prob++){
+        for(let impact=1;impact<6;impact++){
+            if(counts[prob][impact] > 0){
+            onecube.plottext(prob,impact,counts[prob][impact]);
+            }
+        }
+    }
+}
+
 export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact,mitigationlist,person){
     let riskrow = d3.select(element).append("div").attr("class","riskrow")
 
