@@ -3,6 +3,8 @@ from dbcode.dbtools import Risks, Mitigation
 from extensions import db
 import pandas as pd
 from sqlalchemy import select
+from misctools import score
+
 
 summary_bp = Blueprint('summary', __name__)
 
@@ -29,10 +31,14 @@ def waterfalldata(risk_id):
     startprob = risk.probability
     startimpact = risk.impact
     startdate = risk.date
-    wflist.append({'date': startdate, 'probability': startprob, 'impact': startimpact,'complete': 0})
+    wflist.append({'date': startdate, 'probability': startprob, 'impact': startimpact,'complete': 0,'score': score(startprob,startimpact)})
     mitigations = db.session.execute(select(Mitigation).where(Mitigation.risk_id == risk_id)).scalars().all()
     for mitigation in mitigations:
-        wflist.append({'date': mitigation.date, 'probability': mitigation.probability, 'impact': mitigation.impact,'complete': mitigation.complete})
+        wflist.append({'date': mitigation.date,
+                       'probability': mitigation.probability,
+                       'impact': mitigation.impact,
+                       'complete': mitigation.complete,
+                       'score': score(mitigation.probability,mitigation.impact)})
     return wflist.to_json()
 
 
