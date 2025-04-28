@@ -33,7 +33,8 @@ def edit_risk(risk_id):
                         probability=str(risk.probability),
                         impact=str(risk.impact), 
                         Program=riskprogram.id,
-                        Person=riskperson.id)
+                        Person=riskperson.id,
+                        date=risk.date)
 
         if len(Programs.query.all()) > 0:
             form.Program.choices = sorted([(program.id, program.name) for program in Programs.query.all()])
@@ -49,6 +50,7 @@ def edit_risk(risk_id):
             risk.impact = form.impact.data
             risk.program_id = form.Program.data
             risk.person_id = form.Person.data
+            risk.date = form.date.data
 
             db.session.commit()
 

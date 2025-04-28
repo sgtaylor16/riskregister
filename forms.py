@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField,  SubmitField, SubmitField, RadioField,SelectField, SelectMultipleField
 from wtforms.validators import DataRequired
+from wtforms.fields import DateField
 
 class RiskForm(FlaskForm):
     ifstatement = StringField('If Statement', validators=[DataRequired()])
@@ -10,6 +11,7 @@ class RiskForm(FlaskForm):
     submit = SubmitField('Submit')
     Program = SelectField('Program')
     Person = SelectField('Person')
+    date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
 
 class ProgramForm(FlaskForm):
     name = StringField('Program Name', validators=[DataRequired()])

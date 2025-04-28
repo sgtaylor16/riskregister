@@ -5,6 +5,7 @@ from sqlalchemy import Table, Column, Integer, String, DateTime
 from datetime import datetime
 from dbcode.models import Persons, Risks, Mitigations, Programs
 from extensions import db
+from dateutil.parser import parse
 
 
 from sqlalchemy import create_engine
@@ -33,9 +34,9 @@ def populatedb():
     session.add(program2)
     session.commit()
 
-    risk1 = Risks(ifstatement='If Statement #1', thenstatement='Then Statement', probability=1, impact=1, person=person1,program=program1)
-    risk2 = Risks(ifstatement='Risk 2',thenstatement='Then Statement2', probability=2, impact=2, person=person1,program=program2)
-    risk3 = Risks(ifstatement='Risk 3',thenstatement='Then Statement3',probability=3, impact=3, person=person2,program=program1)
+    risk1 = Risks(ifstatement='If Statement #1', thenstatement='Then Statement', probability=1, impact=1, person=person1,program=program1,date = parse('2024-06-15'))
+    risk2 = Risks(ifstatement='Risk 2',thenstatement='Then Statement2', probability=2, impact=2, person=person1,program=program2,date = parse('2024-10-02'))
+    risk3 = Risks(ifstatement='Risk 3',thenstatement='Then Statement3',probability=3, impact=3, person=person2,program=program1,date = parse('2025-03-10'))
     session.add(risk1)
     session.add(risk2)
     session.add(risk3)
