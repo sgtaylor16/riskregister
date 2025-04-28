@@ -144,13 +144,13 @@ def edit_mitigation(mitigation_id):
         return "Mitigation not found", 404
 
     # Render the edit risk template with the risk and mitigations data
-    form = MitigationForm(description=mitigation.description, probability=str(mitigation.probability), impact=str(mitigation.impact), date=mitigation.date.strftime('%Y-%m-%d'), complete=str(mitigation.complete))
+    form = MitigationForm(description=mitigation.description, probability=str(mitigation.probability), impact=str(mitigation.impact), date=mitigation.date, complete=str(mitigation.complete))
     if form.validate_on_submit():
         # Update the mitigation in the database
         mitigation.description = form.description.data
         mitigation.probability = form.probability.data
         mitigation.impact = form.impact.data
-        mitigation.date = parse(form.date.data)
+        mitigation.date = form.date.data
         mitigation.complete = form.complete.data
         db.session.commit()
 
@@ -180,7 +180,7 @@ def new_mitigation(risk_id):
         newmitigation = Mitigations(description=form.description.data,
                                      probability=form.probability.data,
                                      impact=form.impact.data,
-                                     date=parse(form.date.data),
+                                     date=form.date.data,
                                      complete=form.complete.data)
         risk.mitigations.append(newmitigation)
         db.session.commit()

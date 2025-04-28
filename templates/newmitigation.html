@@ -28,15 +28,9 @@
         {% endfor %}
         <br>
         {{ form.date.label}}<br>
-        {{ form.date}}<br>
+        {{ form.date() }}<br>
         {{ form.complete.label}}<br>
-        {{ form.compmlete}}
-        {% for subfield in form.complete %}
-            <tr>
-                <td>{{ subfield }}</td>
-                <td>{{ subfield.label }}</td>
-            </tr>
-        {% endfor %}
+        {{ form.complete()}}
         <br>
 
         {{ form.submit(class="btn btn-primary") }}

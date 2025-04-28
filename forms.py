@@ -25,7 +25,7 @@ class MitigationForm(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     probability = RadioField('Probability', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
     impact = RadioField('Impact', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
-    date = StringField('Date (YYYY-MM-DD)')
+    date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
     complete = RadioField('Complete?', choices=[('1', 'Yes'), ('0', 'No')], validators=[DataRequired()])
     submit = SubmitField('Submit')
 
