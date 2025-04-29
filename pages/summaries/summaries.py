@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, redirect
-from dbcode.dbtools import Risks, Mitigation
+from flask import Blueprint, render_template, jsonify
+from dbcode.dbtools import Risks, Mitigations
 from extensions import db
 import pandas as pd
 from sqlalchemy import select
@@ -24,7 +24,12 @@ def pigcount():
 def summary():
     return render_template('summaries.html')
 
-@summary_bp.route('/waterfalldata/{risk_id}')
+@summary_bp.route('/waterfall/<risk_id>',methods=['GET', 'POST'])
+def waterfall(risk_id):
+
+    return render_template('riskwaterfall.html', id = risk_id)
+
+@summary_bp.route('/riskwaterfalldata/<risk_id>',methods=['GET'])
 def waterfalldata(risk_id):
     wflist = []
     risk = db.session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
@@ -32,17 +37,13 @@ def waterfalldata(risk_id):
     startimpact = risk.impact
     startdate = risk.date
     wflist.append({'date': startdate, 'probability': startprob, 'impact': startimpact,'complete': 0,'score': score(startprob,startimpact)})
-    mitigations = db.session.execute(select(Mitigation).where(Mitigation.risk_id == risk_id)).scalars().all()
+    mitigations = db.session.execute(select(Mitigations).where(Mitigations.risk_id == risk_id)).scalars().all()
     for mitigation in mitigations:
         wflist.append({'date': mitigation.date,
                        'probability': mitigation.probability,
                        'impact': mitigation.impact,
                        'complete': mitigation.complete,
                        'score': score(mitigation.probability,mitigation.impact)})
-    return wflist.to_json()
-
-
-
-
+    return jsonify(wflist)
 
  
