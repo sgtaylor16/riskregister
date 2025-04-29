@@ -162,13 +162,22 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
     let selector = "#riskrow"+ id
     drawriskBox(100,selector,prob,impact,mitigationlist);
 
-    let form = riskrow.append("form")
+    let formdiv = riskrow.append("div").attr("class","formdiv")
+
+    let form = formdiv.append("form")
             .attr("action","/newmit/" + id)
             .attr("method","POST")
     
     form.append("input")
         .attr("type","submit")
         .attr("value","+Mitigation")
+
+    let form2 =formdiv.append("form")
+            .attr("action","/waterfall/" + id)
+            .attr("method","POST")
+    form2.append("input")
+        .attr("type","submit")
+        .attr("value","Waterfall")
 
     let mitdiv = riskrow.append("div").attr("class","mitigations")
     if (mitigationlist.length > 0){
@@ -182,4 +191,52 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
         })
     }
 
+}
+
+export function plotWaterfall(size,svgselector,data){
+    data.forEach(d =>{
+        d.date = new Date(d.date);
+    })
+    console.log(typeof(data[0].date))
+
+    let svg = d3.select(svgselector)
+        .append("svg")
+        .attr("width",size)
+        .attr("height",size);
+
+    let margin = {top: 10, right: 10, bottom: 30, left: 30}
+
+    let yScale = d3.scaleLinear()
+        .domain([0, 1.05 * d3.max(data, function(d) { return d.score; })])
+        .range([size - margin.bottom, margin.top]);
+
+    let xScale = d3.scaleTime()
+        .domain(d3.extent(data, function(d) { return d.date; }))
+        .range([margin.left, size - margin.right]);
+
+    let xAxis = d3.axisBottom(xScale)
+        .ticks(5)
+        .tickFormat(d3.timeFormat("%Y-%m-%d"));
+    let yAxis = d3.axisLeft(yScale)
+    let sorteddata = data.sort((a,b) => a.date - b.date);
+
+    const line = d3.line()
+        .x(d => xScale(d.date))
+        .y(d => yScale(d.score))
+        .curve(d3.curveStepAfter);
+
+    svg.append("path")
+        .attr("d", line(sorteddata))
+        .attr("stroke", "steelblue")
+        .attr("fill", "none")
+
+    svg.append('g')
+        .attr('class', 'x axis')
+        .attr('transform', 'translate(0,' + (size - margin.bottom) + ')')
+        .call(xAxis);
+
+    svg.append('g')
+        .attr('class', 'y axis')
+        .attr('transform', 'translate(' + margin.left + ',0)')
+        .call(yAxis);
 }

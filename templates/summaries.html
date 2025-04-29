@@ -15,7 +15,6 @@
         fetch('/pigdata')
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 pigSummary(500,"#pig",data)
                 
             })
