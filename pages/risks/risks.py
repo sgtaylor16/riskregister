@@ -34,7 +34,9 @@ def edit_risk(risk_id):
                         impact=str(risk.impact), 
                         Program=riskprogram.id,
                         Person=riskperson.id,
-                        date=risk.date)
+                        date=risk.date,
+                        realizedate=risk.realizedate,
+                        expiredate=risk.expiredate)
 
         if len(Programs.query.all()) > 0:
             form.Program.choices = sorted([(program.id, program.name) for program in Programs.query.all()])
@@ -51,6 +53,8 @@ def edit_risk(risk_id):
             risk.program_id = form.Program.data
             risk.person_id = form.Person.data
             risk.date = form.date.data
+            risk.realizedate = form.realizedate.data
+            risk.expiredate = form.expiredate.data
 
             db.session.commit()
 
@@ -70,12 +74,19 @@ def edit_risk(risk_id):
 
         if form.validate_on_submit():
             # Create a new risk in the database
+
+            # Add checks to realizedate and expiredaae
+
                 newrisk = Risks(ifstatement=form.ifstatement.data,
                                 thenstatement=form.thenstatement.data, 
                                 probability=form.probability.data,
                                 impact=form.impact.data,
                                 person_id=form.Person.data,
-                                program_id=form.Program.data)
+                                program_id=form.Program.data,
+                                date=form.date.data,
+                                realizedate=form.realizedate.data,
+                                expiredate=form.expiredate.data
+                                )
                 
                 db.session.add(newrisk)
                 db.session.commit()

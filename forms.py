@@ -12,6 +12,8 @@ class RiskForm(FlaskForm):
     Program = SelectField('Program')
     Person = SelectField('Person')
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
+    realizedate = DateField('Realization Date', format='%Y-%m-%d')
+    expiredate = DateField('Expiration Date', format='%Y-%m-%d')
 
 class ProgramForm(FlaskForm):
     name = StringField('Program Name', validators=[DataRequired()])

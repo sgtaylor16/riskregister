@@ -26,6 +26,8 @@ class Risks(db.Model):
     program: Mapped["Programs"] = relationship(back_populates="risks")
     mitigations: Mapped[List["Mitigations"]] = relationship(back_populates="risk")
     date: Mapped[datetime] = mapped_column(DateTime)
+    realizedate: Mapped[datetime] = mapped_column(DateTime,nullable=True)
+    expiredate: Mapped[datetime] = mapped_column(DateTime,nullable=True)
 
 class Mitigations(db.Model):
     __tablename__ = 'mitigations'
