@@ -1,3 +1,7 @@
+from dbcode.models import Risks
+from typing import Dict
+from datetime import datetime
+
 def score(prob:int,imp:int) -> int:
     """
     Function to calculate the risk score based on probability and impact.
@@ -34,3 +38,18 @@ def score(prob:int,imp:int) -> int:
     probd[5][4] = 24
     probd[5][5] = 29
     return probd[prob][imp]
+
+def currentriskstatus(risk:Risks,date:datetime) -> Dict[str,int]:
+    if len(risk.mitigations) == 0:
+        return {"probability":risk.probability,"impact":risk.impact}
+    else:
+        #Sort mitigations by date
+        sortedrisks = risk.mitigations.sort(key=lambda x: x.date)
+        for risk in sortedrisks:
+            if risk.date >= date:
+                latestrisk = risk
+        return {"probability":latestrisk.probability,"impact":latestrisk.impact}
+
+def currentriskscore(risk:Risks,date:datetime) -> int:
+    riskstatus = currentriskstatus(risk,date)
+    return score(riskstatus["probability"],riskstatus["impact"])

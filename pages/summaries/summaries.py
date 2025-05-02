@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, jsonify
+from flask import Blueprint, render_template, jsonify, request
 from dbcode.dbtools import Risks, Mitigations
 from extensions import db
 import pandas as pd
@@ -45,5 +45,14 @@ def waterfalldata(risk_id):
                        'complete': mitigation.complete,
                        'score': score(mitigation.probability,mitigation.impact)})
     return jsonify(wflist)
+
+@summary_bp.route('progwaterfalldata',methods=['GET','PUT'])
+def progwaterfalldata():
+
+    startdate = request.args.get('startdate')
+
+    #Get all the risks
+    allrisks = db.session.execute(select(Risks)).scalars().all()
+
 
  
