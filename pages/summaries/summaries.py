@@ -46,7 +46,7 @@ def waterfalldata(risk_id):
                        'score': score(mitigation.probability,mitigation.impact)})
     return jsonify(wflist)
 
-@summary_bp.route('progwaterfalldata',methods=['GET','PUT'])
+@summary_bp.route('/progwaterfalldata',methods=['GET','PUT'])
 def progwaterfalldata():
 
     startdate = request.args.get('startdate')
