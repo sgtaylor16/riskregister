@@ -1,7 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField,  SubmitField, SubmitField, RadioField,SelectField, SelectMultipleField
+from wtforms import StringField,  SubmitField, SubmitField, RadioField,SelectField, Form
 from wtforms.validators import DataRequired
 from wtforms.fields import DateField
+from flask import request
+
+#class BaseForm(Form):
+#    def validate_on_submit(self):
+#        return request.method =="POST" and self.validate()
 
 class RiskForm(FlaskForm):
     ifstatement = StringField('If Statement', validators=[DataRequired()])
@@ -35,7 +40,7 @@ class DeleteMitigationForm(FlaskForm):
     submit = SubmitField('Delete Mitigation')
 
 class newRiskButton(FlaskForm):
-    submit = SubmitField('New Risk',name='newrisksubmit', id='newrisksubmit')
+    submit = SubmitField('New Risk', id='newrisksubmit')
 
 class PersonForm(FlaskForm):
     last_name = StringField('Last Name', validators=[DataRequired()])

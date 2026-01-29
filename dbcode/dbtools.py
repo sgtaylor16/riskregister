@@ -1,5 +1,3 @@
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
 from sqlalchemy import Table, Column, Integer, String, DateTime
 from datetime import datetime
