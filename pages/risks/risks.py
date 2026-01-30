@@ -3,7 +3,6 @@ from forms import RiskForm,MitigationForm,DeleteMitigationForm
 from dbcode.models import Risks, Mitigations, Programs,Persons
 from sqlalchemy import select, and_
 from extensions import db
-from dateutil.parser import parse
 from typing import List, Dict
 from misctools import score
 

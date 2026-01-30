@@ -1,20 +1,18 @@
 from sqlalchemy.orm import relationship
 from sqlalchemy import ForeignKey, Column, Table
 from sqlalchemy import Integer, String, DateTime
-from sqlalchemy.orm import declarative_base
 from datetime import datetime
 from typing import List
 from extensions import db
 
-Base = declarative_base()
-class Persons(Base):
+class Persons(db.Model):
     __tablename__ = 'persons'
     id = Column(Integer, primary_key=True)
     last_name = Column(String(50),nullable=False)
     first_name = Column(String(50),nullable=False)
     risks = relationship("Risks",back_populates="person")
 
-class Risks(Base):
+class Risks(db.Model):
     __tablename__ = 'risks'
     id = Column(Integer,primary_key=True)
     ifstatement = Column(String(100))
@@ -30,7 +28,7 @@ class Risks(Base):
     realizedate = Column(DateTime,nullable=True)
     expiredate = Column(DateTime,nullable=True)
     
-class Mitigations(Base):
+class Mitigations(db.Model):
     __tablename__ = 'mitigations'
     id = Column(Integer,primary_key=True)
     description = Column(String(100), nullable=False)
@@ -41,7 +39,7 @@ class Mitigations(Base):
     date = Column(DateTime)
     complete = Column(Integer,default=0)
 
-class Programs(Base):
+class Programs(db.Model):
     __tablename__ = 'programs'
     id = Column(Integer,primary_key=True)
     name = Column(String(100))
