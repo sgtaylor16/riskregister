@@ -180,13 +180,24 @@ def edit_mitigation(mitigation_id):
     if deletemitform.validate_on_submit():
         # Delete the mitigation from the database
         print("Deleting mitigation")
-        db.session.delete(mitigation)
-        db.session.commit()
-        return redirect('/dashboard')
+        return redirect('/deletemit/' + str(mitigation_id))
     else:
         print(deletemitform.errors)
 
-    return render_template('editmitigation.html',mitform=mitform, deletemitform=deletemitform)
+    return render_template('editmitigation.html',mitform=mitform, deletemitform=deletemitform, mitigation_id=mitigation_id)
+
+@risks_bp.route('/deletemit/<mitigation_id>', methods=['POST'])
+def delete_mitigation(mitigation_id):
+    # Get the mitigation from the database
+    mitigation = db.session.execute(select(Mitigations).where(Mitigations.id == mitigation_id)).scalar_one_or_none()
+    if mitigation is None:
+        return "Mitigation not found", 404
+
+    # Delete the mitigation from the database
+    db.session.delete(mitigation)
+    db.session.commit()
+
+    return redirect('/dashboard')
 
 @risks_bp.route('/newmit/<risk_id>', methods=['GET', 'POST'])
 def new_mitigation(risk_id):
