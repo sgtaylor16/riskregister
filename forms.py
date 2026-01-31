@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField,  SubmitField, SubmitField, RadioField,SelectField, Form
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Optional
 from wtforms.fields import DateField
 from flask import request
 
@@ -17,8 +17,8 @@ class RiskForm(FlaskForm):
     Program = SelectField('Program')
     Person = SelectField('Person')
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
-    realizedate = DateField('Realization Date', format='%Y-%m-%d')
-    expiredate = DateField('Expiration Date', format='%Y-%m-%d')
+    realizedate = DateField('Realization Date', format='%Y-%m-%d', validators=[Optional()])
+    expiredate = DateField('Expiration Date', format='%Y-%m-%d', validators=[Optional()])
 
 class ProgramForm(FlaskForm):
     name = StringField('Program Name', validators=[DataRequired()])

@@ -21,7 +21,10 @@ def dashboard():
     if newriskform.validate_on_submit():
         # Handle the new risk button submission
         maxid_query = db.session.query(func.max(Risks.id)).all()
-        max_id = maxid_query[0][0]+1
+        if maxid_query[0][0] is None:
+            max_id = 1
+        else:
+            max_id = maxid_query[0][0]+1
 
         return redirect(f'/editrisk/{max_id}')
 

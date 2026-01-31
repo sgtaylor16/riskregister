@@ -15,8 +15,13 @@ risks_bp = Blueprint('risks', __name__)
 def edit_risk(risk_id):
    
     # Find the maximum risk ID in the database
-    max_risk_id = int(db.session.query(db.func.max(Risks.id)).scalar())
+    max_risk_id = db.session.query(db.func.max(Risks.id)).scalar()
+    if max_risk_id is None:
+        max_risk_id = 0
+    else:
+        max_risk_id = int(max_risk_id)
 
+    print("I'm editing risk ID:")
     if int(risk_id) <= max_risk_id:
     #It is an existing risk get it.
 
@@ -24,7 +29,7 @@ def edit_risk(risk_id):
         if risk is None:
             return "Risk not found", 404
         
-        #Get the asscoated program
+        #Get the associated program
         riskprogram = Programs.query.filter_by(id=risk.program_id).first()
         riskperson = Persons.query.filter_by(id=risk.person_id).first()
 
@@ -63,6 +68,7 @@ def edit_risk(risk_id):
         return render_template('riskdetail.html', form=form)
     else:
     #It is a new risk
+        print("Creating new risk")
 
         form= RiskForm()
 
@@ -73,25 +79,30 @@ def edit_risk(risk_id):
             form.Person.choices = sorted([(person.id,person.last_name + " " + person.first_name) for person in Persons.query.all()])
 
         if form.validate_on_submit():
+            print("Form validated")
+            
             # Create a new risk in the database
 
-            # Add checks to realizedate and expiredaae
+            # Add checks to realizedate and expiredate
 
-                newrisk = Risks(ifstatement=form.ifstatement.data,
-                                thenstatement=form.thenstatement.data, 
-                                probability=form.probability.data,
-                                impact=form.impact.data,
-                                person_id=form.Person.data,
-                                program_id=form.Program.data,
-                                date=form.date.data,
-                                realizedate=form.realizedate.data,
-                                expiredate=form.expiredate.data
-                                )
-                
-                db.session.add(newrisk)
-                db.session.commit()
+            newrisk = Risks(ifstatement=form.ifstatement.data,
+                            thenstatement=form.thenstatement.data, 
+                            probability=form.probability.data,
+                            impact=form.impact.data,
+                            person_id=form.Person.data,
+                            program_id=form.Program.data,
+                            date=form.date.data,
+                            realizedate=form.realizedate.data,
+                            expiredate=form.expiredate.data
+                            )
+            print(newrisk)
+            
+            db.session.add(newrisk)
+            db.session.commit()
 
-                return redirect('/')
+            return redirect('/')
+        else:
+            print(form.errors)
         
         return render_template('riskdetail.html', form=form)
 
