@@ -146,6 +146,13 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
     let idcolumn = riskrow.append("div").attr("class","riskid")
     idcolumn.append('p').append("a").attr('href',"/editrisk/" + id).text(id);
 
+    let deletebutton = idcolumn.append("form").attr("type","submit")
+        .attr("action","/deleterisk/" + id)
+        .attr("method","POST");
+    deletebutton.append("input")
+        .attr("type","submit")
+        .attr("value","Delete Risk");
+
     let programcolumn = riskrow.append("div").attr("class","program")
     programcolumn.append("p").text(program)
     programcolumn.append("br");
