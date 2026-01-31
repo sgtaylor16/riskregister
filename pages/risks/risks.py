@@ -13,7 +13,6 @@ risks_bp = Blueprint('risks', __name__)
 
 @risks_bp.route('/editrisk/<risk_id>', methods=['GET', 'POST'])
 def edit_risk(risk_id):
-   
     # Find the maximum risk ID in the database
     max_risk_id = db.session.query(db.func.max(Risks.id)).scalar()
     if max_risk_id is None:
@@ -21,7 +20,6 @@ def edit_risk(risk_id):
     else:
         max_risk_id = int(max_risk_id)
 
-    print("I'm editing risk ID:")
     if int(risk_id) <= max_risk_id:
     #It is an existing risk get it.
 
@@ -68,7 +66,6 @@ def edit_risk(risk_id):
         return render_template('riskdetail.html', form=form)
     else:
     #It is a new risk
-        print("Creating new risk")
 
         form= RiskForm()
 
@@ -102,6 +99,7 @@ def edit_risk(risk_id):
 
             return redirect('/')
         else:
+            #Should only get here if the form did not validate
             print(form.errors)
         
         return render_template('riskdetail.html', form=form)
@@ -211,3 +209,15 @@ def new_mitigation(risk_id):
 
     return render_template('newmitigation.html',form=form)
 
+@risks_bp.route('/deleterisk/<risk_id>', methods=['POST'])
+def delete_risk(risk_id):
+    # Get the risk from the database
+    risk = db.session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
+    if risk is None:
+        return "Risk not found", 404
+
+    # Delete the risk from the database
+    db.session.delete(risk)
+    db.session.commit()
+
+    return redirect('/dashboard')
