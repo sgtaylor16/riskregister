@@ -9,29 +9,29 @@
 <body>
     <h1>Edit Mitigation</h1>
     <form action="" method="post">
-        {{ form.hidden_tag() }}
-        {{ form.description.label }}<br>
-        {{ form.description(size=80)}}<br>
-        {{ form.probability.label}}<br>
-        {% for subfield in form.probability %}
+        {{ mitform.hidden_tag() }}
+        {{ mitform.description.label }}<br>
+        {{ mitform.description(size=80)}}<br>
+        {{ mitform.probability.label}}<br>
+        {% for subfield in mitform.probability %}
             <tr>
                 <td>{{ subfield }}</td>
                 <td>{{ subfield.label }}</td>
             </tr>
         {% endfor %}<br>
-        {{ form.impact.label }}<br>
-        {% for subfield in form.impact %}
+        {{ mitform.impact.label }}<br>
+        {% for subfield in mitform.impact %}
             <tr>
                 <td>{{ subfield }}</td>
                 <td>{{ subfield.label }}</td>
             </tr>
         {% endfor %}
         <br>
-        {{ form.date.label}}<br>
-        {{ form.date}}<br>
-        {{ form.complete.label}}<br>
-        {{ form.compmlete}}
-        {% for subfield in form.complete %}
+        {{ mitform.date.label}}<br>
+        {{ mitform.date}}<br>
+        {{ mitform.complete.label}}<br>
+        {{ mitform.complete}}
+        {% for subfield in mitform.complete %}
             <tr>
                 <td>{{ subfield }}</td>
                 <td>{{ subfield.label }}</td>
@@ -39,7 +39,7 @@
         {% endfor %}
         <br>
 
-        {{ form.submit(class="btn btn-primary") }}
+        {{ mitform.submit(class="btn btn-primary") }}
     </form>
     <h1>Delete Mitigation</h1>
     <form>

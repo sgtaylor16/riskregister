@@ -164,17 +164,17 @@ def edit_mitigation(mitigation_id):
         return "Mitigation not found", 404
 
     # Render the edit risk template with the risk and mitigations data
-    form = MitigationForm(description=mitigation.description, probability=str(mitigation.probability), impact=str(mitigation.impact), date=mitigation.date, complete=str(mitigation.complete))
-    if form.validate_on_submit():
+    mitform = MitigationForm(description=mitigation.description, probability=str(mitigation.probability), impact=str(mitigation.impact), date=mitigation.date, complete=str(mitigation.complete))
+    if mitform.validate_on_submit():
         # Update the mitigation in the database
-        mitigation.description = form.description.data
-        mitigation.probability = form.probability.data
-        mitigation.impact = form.impact.data
-        mitigation.date = form.date.data
-        mitigation.complete = form.complete.data
+        mitigation.description = mitform.description.data
+        mitigation.probability = mitform.probability.data
+        mitigation.impact = mitform.impact.data
+        mitigation.date = mitform.date.data
+        mitigation.complete = mitform.complete.data
         db.session.commit()
 
-        return redirect('/')
+        return redirect('/dashboard')
     
     deletemitform = DeleteMitigationForm()
     if deletemitform.validate_on_submit():
@@ -182,9 +182,11 @@ def edit_mitigation(mitigation_id):
         print("Deleting mitigation")
         db.session.delete(mitigation)
         db.session.commit()
-        return redirect('/')
+        return redirect('/dashboard')
+    else:
+        print(deletemitform.errors)
 
-    return render_template('editmitigation.html',form=form, deletemitform=deletemitform)
+    return render_template('editmitigation.html',mitform=mitform, deletemitform=deletemitform)
 
 @risks_bp.route('/newmit/<risk_id>', methods=['GET', 'POST'])
 def new_mitigation(risk_id):
