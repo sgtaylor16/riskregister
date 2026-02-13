@@ -171,14 +171,13 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
 
     let formdiv = riskrow.append("div").attr("class","formdiv")
 
-    let form = formdiv.append("form")
-            .attr("action","/newmit/" + id)
-            .attr("method","POST")
+    let newmit_button = formdiv.append("button")
+        .attr("type","button")
+        .text("New Mitigation")
+        .on("click", function() {
+            window.location.href = "/newmit/" + id;
+        });
     
-    form.append("input")
-        .attr("type","submit")
-        .attr("value","+Mitigation")
-
     let form2 =formdiv.append("form")
             .attr("action","/waterfall/" + id)
             .attr("method","POST")
