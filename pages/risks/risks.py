@@ -233,4 +233,10 @@ def delete_risk(risk_id):
     db.session.delete(risk)
     db.session.commit()
 
+    # Delete mitigations associated with the risk
+    mitigations = db.session.execute(select(Mitigations).where(Mitigations.risk_id == risk_id)).scalars().all()
+    for mitigation in mitigations:
+        db.session.delete(mitigation)
+    db.session.commit()
+
     return redirect('/dashboard')
