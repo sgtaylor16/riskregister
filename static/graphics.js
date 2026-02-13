@@ -151,7 +151,7 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
         .attr("method","POST");
     deletebutton.append("input")
         .attr("type","submit")
-        .attr("value","Delete Risk");
+        .attr("value","Delete");
 
     let programcolumn = riskrow.append("div").attr("class","program")
     programcolumn.append("p").text(program)
