@@ -177,13 +177,13 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
         .on("click", function() {
             window.location.href = "/newmit/" + id;
         });
-    
-    let form2 =formdiv.append("form")
-            .attr("action","/waterfall/" + id)
-            .attr("method","POST")
-    form2.append("input")
-        .attr("type","submit")
-        .attr("value","Waterfall")
+
+    let waterfallbutton = formdiv.append("button")
+        .attr("type","button")
+        .text("Waterfall")
+        .on("click", function() {
+            window.location.href = "/waterfall/" + id;
+        });
 
     let mitdiv = riskrow.append("div").attr("class","mitigations")
     if (mitigationlist.length > 0){
