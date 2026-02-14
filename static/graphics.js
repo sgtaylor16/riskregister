@@ -173,7 +173,7 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
 
     let newmit_button = formdiv.append("button")
         .attr("type","button")
-        .text("New Mitigation")
+        .text("+Mitigation")
         .on("click", function() {
             window.location.href = "/newmit/" + id;
         });
