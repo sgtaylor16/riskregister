@@ -151,7 +151,7 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
         .attr("method","POST");
     deletebutton.append("input")
         .attr("type","submit")
-        .attr("value","Delete Risk");
+        .attr("value","Delete");
 
     let programcolumn = riskrow.append("div").attr("class","program")
     programcolumn.append("p").text(program)
@@ -171,20 +171,19 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
 
     let formdiv = riskrow.append("div").attr("class","formdiv")
 
-    let form = formdiv.append("form")
-            .attr("action","/newmit/" + id)
-            .attr("method","POST")
-    
-    form.append("input")
-        .attr("type","submit")
-        .attr("value","+Mitigation")
+    let newmit_button = formdiv.append("button")
+        .attr("type","button")
+        .text("+Mitigation")
+        .on("click", function() {
+            window.location.href = "/newmit/" + id;
+        });
 
-    let form2 =formdiv.append("form")
-            .attr("action","/waterfall/" + id)
-            .attr("method","POST")
-    form2.append("input")
-        .attr("type","submit")
-        .attr("value","Waterfall")
+    let waterfallbutton = formdiv.append("button")
+        .attr("type","button")
+        .text("Waterfall")
+        .on("click", function() {
+            window.location.href = "/waterfall/" + id;
+        });
 
     let mitdiv = riskrow.append("div").attr("class","mitigations")
     if (mitigationlist.length > 0){
