@@ -206,21 +206,19 @@ def new_mitigation(risk_id):
     if risk is None:
         return "Risk not found", 404
 
-    # Render the edit risk template with the risk and mitigations data
-    form = MitigationForm()
-    if form.validate_on_submit():
+    if request.method == 'POST':
         # Create a new mitigation in the database
-        newmitigation = Mitigations(description=form.description.data,
-                                     probability=form.probability.data,
-                                     impact=form.impact.data,
-                                     date=form.date.data,
-                                     complete=form.complete.data)
+        newmitigation = Mitigations(description=request.form.get('description'),
+                                     probability=int(request.form.get('probability')),
+                                     impact=int(request.form.get('impact')),
+                                     date=parse(request.form.get('date')),
+                                     complete=int(request.form.get('complete')))
         risk.mitigations.append(newmitigation)
         db.session.commit()
 
         return redirect('/')
 
-    return render_template('newmitigation.html',form=form)
+    return render_template('newmitigation.html')
 
 @risks_bp.route('/deleterisk/<risk_id>', methods=['POST'])
 def delete_risk(risk_id):
