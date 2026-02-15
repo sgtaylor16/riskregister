@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, jsonify, request
-from forms import RiskForm,MitigationForm,DeleteMitigationForm
+from forms import RiskForm
 from dbcode.models import Risks, Mitigations, Programs,Persons
 from sqlalchemy import select, and_
 from extensions import db
@@ -163,28 +163,18 @@ def edit_mitigation(mitigation_id):
     if mitigation is None:
         return "Mitigation not found", 404
 
-    # Render the edit risk template with the risk and mitigations data
-    mitform = MitigationForm(description=mitigation.description, probability=str(mitigation.probability), impact=str(mitigation.impact), date=mitigation.date, complete=str(mitigation.complete))
-    if mitform.validate_on_submit():
+    if request.method == 'POST':
         # Update the mitigation in the database
-        mitigation.description = mitform.description.data
-        mitigation.probability = mitform.probability.data
-        mitigation.impact = mitform.impact.data
-        mitigation.date = mitform.date.data
-        mitigation.complete = mitform.complete.data
+        mitigation.description = request.form.get('description')
+        mitigation.probability = int(request.form.get('probability'))
+        mitigation.impact = int(request.form.get('impact'))
+        mitigation.date = parse(request.form.get('date'))
+        mitigation.complete = int(request.form.get('complete'))
         db.session.commit()
 
         return redirect('/dashboard')
-    
-    deletemitform = DeleteMitigationForm()
-    if deletemitform.validate_on_submit():
-        # Delete the mitigation from the database
-        print("Deleting mitigation")
-        return redirect('/deletemit/' + str(mitigation_id))
-    else:
-        print(deletemitform.errors)
 
-    return render_template('editmitigation.html',mitform=mitform, deletemitform=deletemitform, mitigation_id=mitigation_id)
+    return render_template('editmitigation.html', mitigation=mitigation, mitigation_id=mitigation_id)
 
 @risks_bp.route('/deletemit/<mitigation_id>', methods=['POST'])
 def delete_mitigation(mitigation_id):
