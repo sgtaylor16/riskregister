@@ -3,37 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Mitigation</title>
+    <title>New Mitigation</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
     <h1>New Mitigation</h1>
     <form action="" method="post">
-        {{ form.hidden_tag() }}
-        {{ form.description.label }}<br>
-        {{ form.description(size=80)}}<br>
-        {{ form.probability.label}}<br>
-        {% for subfield in form.probability %}
-            <tr>
-                <td>{{ subfield }}</td>
-                <td>{{ subfield.label }}</td>
-            </tr>
-        {% endfor %}<br>
-        {{ form.impact.label }}<br>
-        {% for subfield in form.impact %}
-            <tr>
-                <td>{{ subfield }}</td>
-                <td>{{ subfield.label }}</td>
-            </tr>
-        {% endfor %}
+        <label for="description">Description</label><br>
+        <input type="text" name="description" id="description" size="80" required><br>
+        
+        <label>Probability</label><br>
+        <input type="radio" name="probability" value="1" id="prob1" required>
+        <label for="prob1">1</label>
+        <input type="radio" name="probability" value="2" id="prob2">
+        <label for="prob2">2</label>
+        <input type="radio" name="probability" value="3" id="prob3">
+        <label for="prob3">3</label>
+        <input type="radio" name="probability" value="4" id="prob4">
+        <label for="prob4">4</label>
+        <input type="radio" name="probability" value="5" id="prob5">
+        <label for="prob5">5</label><br>
+        
+        <label>Impact</label><br>
+        <input type="radio" name="impact" value="1" id="impact1" required>
+        <label for="impact1">1</label>
+        <input type="radio" name="impact" value="2" id="impact2">
+        <label for="impact2">2</label>
+        <input type="radio" name="impact" value="3" id="impact3">
+        <label for="impact3">3</label>
+        <input type="radio" name="impact" value="4" id="impact4">
+        <label for="impact4">4</label>
+        <input type="radio" name="impact" value="5" id="impact5">
+        <label for="impact5">5</label><br>
+        
+        <label for="date">Date</label><br>
+        <input type="date" name="date" id="date" required><br>
+        
+        <label>Complete?</label><br>
+        <input type="radio" name="complete" value="1" id="complete-yes" required>
+        <label for="complete-yes">Yes</label>
+        <input type="radio" name="complete" value="0" id="complete-no">
+        <label for="complete-no">No</label><br>
         <br>
-        {{ form.date.label}}<br>
-        {{ form.date() }}<br>
-        {{ form.complete.label}}<br>
-        {{ form.complete()}}
-        <br>
-
-        {{ form.submit(class="btn btn-primary") }}
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>

@@ -9,37 +9,44 @@
 <body>
     <h1>Edit Mitigation</h1>
     <form action="" method="post">
-        {{ mitform.hidden_tag() }}
-        {{ mitform.description.label }}<br>
-        {{ mitform.description(size=80)}}<br>
-        {{ mitform.probability.label}}<br>
-        {% for subfield in mitform.probability %}
-            <tr>
-                <td>{{ subfield }}</td>
-                <td>{{ subfield.label }}</td>
-            </tr>
-        {% endfor %}<br>
-        {{ mitform.impact.label }}<br>
-        {% for subfield in mitform.impact %}
-            <tr>
-                <td>{{ subfield }}</td>
-                <td>{{ subfield.label }}</td>
-            </tr>
-        {% endfor %}
+        <label for="description">Description</label><br>
+        <input type="text" name="description" id="description" size="80" value="{{ mitigation.description }}" required><br>
+        
+        <label>Probability</label><br>
+        <input type="radio" name="probability" value="1" id="prob1" {% if mitigation.probability == 1 %}checked{% endif %} required>
+        <label for="prob1">1</label>
+        <input type="radio" name="probability" value="2" id="prob2" {% if mitigation.probability == 2 %}checked{% endif %}>
+        <label for="prob2">2</label>
+        <input type="radio" name="probability" value="3" id="prob3" {% if mitigation.probability == 3 %}checked{% endif %}>
+        <label for="prob3">3</label>
+        <input type="radio" name="probability" value="4" id="prob4" {% if mitigation.probability == 4 %}checked{% endif %}>
+        <label for="prob4">4</label>
+        <input type="radio" name="probability" value="5" id="prob5" {% if mitigation.probability == 5 %}checked{% endif %}>
+        <label for="prob5">5</label><br>
+        
+        <label>Impact</label><br>
+        <input type="radio" name="impact" value="1" id="impact1" {% if mitigation.impact == 1 %}checked{% endif %} required>
+        <label for="impact1">1</label>
+        <input type="radio" name="impact" value="2" id="impact2" {% if mitigation.impact == 2 %}checked{% endif %}>
+        <label for="impact2">2</label>
+        <input type="radio" name="impact" value="3" id="impact3" {% if mitigation.impact == 3 %}checked{% endif %}>
+        <label for="impact3">3</label>
+        <input type="radio" name="impact" value="4" id="impact4" {% if mitigation.impact == 4 %}checked{% endif %}>
+        <label for="impact4">4</label>
+        <input type="radio" name="impact" value="5" id="impact5" {% if mitigation.impact == 5 %}checked{% endif %}>
+        <label for="impact5">5</label><br>
+        
+        <label for="date">Date</label><br>
+        <input type="date" name="date" id="date" value="{{ mitigation.date.strftime('%Y-%m-%d') }}" required><br>
+        
+        <label>Complete?</label><br>
+        <input type="radio" name="complete" value="1" id="complete-yes" {% if mitigation.complete == 1 %}checked{% endif %} required>
+        <label for="complete-yes">Yes</label>
+        <input type="radio" name="complete" value="0" id="complete-no" {% if mitigation.complete == 0 %}checked{% endif %}>
+        <label for="complete-no">No</label><br>
         <br>
-        {{ mitform.date.label}}<br>
-        {{ mitform.date}}<br>
-        {{ mitform.complete.label}}<br>
-        {{ mitform.complete}}
-        {% for subfield in mitform.complete %}
-            <tr>
-                <td>{{ subfield }}</td>
-                <td>{{ subfield.label }}</td>
-            </tr>
-        {% endfor %}
-        <br>
-
-        {{ mitform.submit(class="btn btn-primary") }}
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <h1>Delete Mitigation</h1>
     <div id="deletemitloc"></div>
