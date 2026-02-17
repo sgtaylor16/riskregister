@@ -14,27 +14,27 @@
         
         <label>Probability</label><br>
         <input type="radio" name="probability" value="1" id="prob1" {% if mitigation.probability == 1 %}checked{% endif %} required>
-        <label for="prob1">1</label>
+        <label for="prob1">VLo</label>
         <input type="radio" name="probability" value="2" id="prob2" {% if mitigation.probability == 2 %}checked{% endif %}>
-        <label for="prob2">2</label>
+        <label for="prob2">Lo</label>
         <input type="radio" name="probability" value="3" id="prob3" {% if mitigation.probability == 3 %}checked{% endif %}>
-        <label for="prob3">3</label>
+        <label for="prob3">Med</label>
         <input type="radio" name="probability" value="4" id="prob4" {% if mitigation.probability == 4 %}checked{% endif %}>
-        <label for="prob4">4</label>
+        <label for="prob4">Hi</label>
         <input type="radio" name="probability" value="5" id="prob5" {% if mitigation.probability == 5 %}checked{% endif %}>
-        <label for="prob5">5</label><br>
+        <label for="prob5">VHi</label><br>
         
         <label>Impact</label><br>
         <input type="radio" name="impact" value="1" id="impact1" {% if mitigation.impact == 1 %}checked{% endif %} required>
-        <label for="impact1">1</label>
+        <label for="impact1">VLo</label>
         <input type="radio" name="impact" value="2" id="impact2" {% if mitigation.impact == 2 %}checked{% endif %}>
-        <label for="impact2">2</label>
+        <label for="impact2">Lo</label>
         <input type="radio" name="impact" value="3" id="impact3" {% if mitigation.impact == 3 %}checked{% endif %}>
-        <label for="impact3">3</label>
+        <label for="impact3">Med</label>
         <input type="radio" name="impact" value="4" id="impact4" {% if mitigation.impact == 4 %}checked{% endif %}>
-        <label for="impact4">4</label>
+        <label for="impact4">Hi</label>
         <input type="radio" name="impact" value="5" id="impact5" {% if mitigation.impact == 5 %}checked{% endif %}>
-        <label for="impact5">5</label><br>
+        <label for="impact5">VHi</label><br>
         
         <label for="date">Date</label><br>
         <input type="date" name="date" id="date" value="{{ mitigation.date.strftime('%Y-%m-%d') }}" required><br>
