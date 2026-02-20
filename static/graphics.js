@@ -51,7 +51,9 @@ export class RiskCube{
         this.selector = selector;
         this.margin = margin;
         this.cubewidth = (size - 2*margin)/5;
+        this.cubelabelfont = Math.max(8, this.cubewidth/2.5);
         this.xshift = 10;
+        this.yshift = 20;
     }
     coordinates(prob,impact){
         //function to conver probability and impact "coordinates" to screen coordinates
@@ -66,7 +68,7 @@ export class RiskCube{
 
     draw(){
         const width = this.size;
-        const height = this.size;
+        const height = this.size + this.cubelabelfont;
         const margin = this.margin;
         const cubewidth = (width - 2*margin)/5;
         const bottomlabels = ["VLo","Lo","Med","Hi","VHi"];
@@ -92,9 +94,9 @@ export class RiskCube{
         for (let i=0;i<5;i++){
             svg.append("text")
                 .attr("x",i*cubewidth + margin + cubewidth/2 + this.xshift)
-                .attr("y",height - 2)
+                .attr("y",5*cubewidth + margin + this.cubelabelfont)
                 .attr("text-anchor","middle")
-                .attr("font-size",Math.max(8, cubewidth/2.5))
+                .attr("font-size",this.cubelabelfont)
                 .text(bottomlabels[i]);
         }
         //Put in the side labels of the risk cube
@@ -103,7 +105,7 @@ export class RiskCube{
                 .attr("x",2)
                 .attr("y",j*cubewidth + margin + cubewidth/2)
                 .attr("dominant-baseline","middle")
-                .attr("font-size",Math.max(8, cubewidth/2.5))
+                .attr("font-size",this.cubelabelfont)
                 .text(sideLabels[j]);
         }
         this.cubesvg = svg;
