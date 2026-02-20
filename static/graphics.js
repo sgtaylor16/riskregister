@@ -51,6 +51,7 @@ export class RiskCube{
         this.selector = selector;
         this.margin = margin;
         this.cubewidth = (size - 2*margin)/5;
+        this.xshift = 10;
     }
     coordinates(prob,impact){
         //function to conver probability and impact "coordinates" to screen coordinates
@@ -73,13 +74,13 @@ export class RiskCube{
 
         const svg = d3.select(this.selector)
                     .append("svg")
-                    .attr("width",width)
+                    .attr("width",width + this.xshift)
                     .attr("height",height);
 
         for (let i=0;i<5;i++){
             for(let j=0;j<5;j++){
                 svg.append("rect")
-                    .attr("x",i*cubewidth + margin)
+                    .attr("x",i*cubewidth + margin + this.xshift)
                     .attr("y",j*cubewidth + margin)
                     .attr("width",cubewidth)
                     .attr("height",cubewidth)
@@ -87,16 +88,16 @@ export class RiskCube{
                     .attr("fill",cubecolor(i,j))
             }
         }
-
+        //Put in the bottom labels of the risk cube
         for (let i=0;i<5;i++){
             svg.append("text")
-                .attr("x",i*cubewidth + margin + cubewidth/2)
+                .attr("x",i*cubewidth + margin + cubewidth/2 + this.xshift)
                 .attr("y",height - 2)
                 .attr("text-anchor","middle")
                 .attr("font-size",Math.max(8, cubewidth/2.5))
                 .text(bottomlabels[i]);
         }
-
+        //Put in the side labels of the risk cube
         for (let j=0;j<5;j++){
             svg.append("text")
                 .attr("x",2)
@@ -113,7 +114,7 @@ export class RiskCube{
         let [xpt,ypt] = this.coordinates(prob,impact);
 
         this.cubesvg.append("circle")
-            .attr("cx",xpt)
+            .attr("cx",xpt + this.xshift)
             .attr("cy",ypt)
             .attr("r",this.cubewidth/3)
             .attr("fill","black")
@@ -124,7 +125,7 @@ export class RiskCube{
         let [xpt,ypt] = this.coordinates(prob,impact);
 
         this.cubesvg.append("text")
-            .attr("x",xpt)
+            .attr("x",xpt+ this.xshift)
             .attr("y",ypt + this.cubewidth/4)
             .attr("text-anchor","middle")
             .attr("font-size",this.cubewidth/1.2)
