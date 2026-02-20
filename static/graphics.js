@@ -52,8 +52,7 @@ export class RiskCube{
         this.margin = margin;
         this.cubewidth = (size - 2*margin)/5;
         this.cubelabelfont = Math.max(8, this.cubewidth/2.5);
-        this.xshift = 10;
-        this.yshift = 20;
+        this.xshift = this.cubelabelfont*1.8
     }
     coordinates(prob,impact){
         //function to conver probability and impact "coordinates" to screen coordinates
