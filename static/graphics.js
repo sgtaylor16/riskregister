@@ -66,8 +66,10 @@ export class RiskCube{
     draw(){
         const width = this.size;
         const height = this.size;
-        const margin = 10;
+        const margin = this.margin;
         const cubewidth = (width - 2*margin)/5;
+        const bottomlabels = ["VLo","Lo","Med","Hi","VHi"];
+        const sideLabels = ["VHi","Hi","Med","Lo","VLo"];
 
         const svg = d3.select(this.selector)
                     .append("svg")
@@ -84,6 +86,24 @@ export class RiskCube{
                     .attr('stroke','black')
                     .attr("fill",cubecolor(i,j))
             }
+        }
+
+        for (let i=0;i<5;i++){
+            svg.append("text")
+                .attr("x",i*cubewidth + margin + cubewidth/2)
+                .attr("y",height - 2)
+                .attr("text-anchor","middle")
+                .attr("font-size",Math.max(8, cubewidth/2.5))
+                .text(bottomlabels[i]);
+        }
+
+        for (let j=0;j<5;j++){
+            svg.append("text")
+                .attr("x",2)
+                .attr("y",j*cubewidth + margin + cubewidth/2)
+                .attr("dominant-baseline","middle")
+                .attr("font-size",Math.max(8, cubewidth/2.5))
+                .text(sideLabels[j]);
         }
         this.cubesvg = svg;
     }
