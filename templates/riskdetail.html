@@ -37,13 +37,13 @@
         <br>
         <label for="date">Date</label>
         <br>
-        <input type="date" name="date" id="date" required><br>
+        <input type="date" name="date" id="date" value="{{ risk.date.strftime('%Y-%m-%d') if risk and risk.date else '' }}" required><br>
         <br>
         <label for="realizedate">Realize Date</label><br>
-        <input type="date" name="realizedate" id="realizedate"><br>
+        <input type="date" name="realizedate" id="realizedate" value="{{ risk.realizedate.strftime('%Y-%m-%d') if risk and risk.realizedate else '' }}"><br>
         <br>
         <label for="expiredate">Expire Date</label><br>
-        <input type="date" name="expiredate" id="expiredate"><br>
+        <input type="date" name="expiredate" id="expiredate" value="{{ risk.expiredate.strftime('%Y-%m-%d') if risk and risk.expiredate else '' }}"><br>
         <br>
         <button type="submit" class="btn btn-primary">Submit</button>
 
