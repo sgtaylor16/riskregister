@@ -7,9 +7,14 @@ from dateutil.parser import parse
 from typing import List, Dict
 from misctools import score
 
+def parse_date(date_str):
+    # This function will be used to parse the date strings from the form and convert them to datetime objects
+    try:
+        return parse(date_str)
+    except ValueError:
+        return None
 
 risks_bp = Blueprint('risks', __name__)
-
 
 @risks_bp.route('/editrisk/<risk_id>', methods=['GET', 'POST'])
 def edit_risk(risk_id):
@@ -55,15 +60,15 @@ def edit_risk(risk_id):
             risk.impact = form.impact.data
             risk.program_id = form.Program.data
             risk.person_id = form.Person.data
-            risk.date = form.date.data
-            risk.realizedate = form.realizedate.data
-            risk.expiredate = form.expiredate.data
+            risk.date = parse_date(request.form.get('date'))
+            risk.realizedate = parse_date(request.form.get('realizedate'))
+            risk.expiredate = parse_date(request.form.get('expiredate'))
 
             db.session.commit()
 
             return redirect('/')
 
-        return render_template('riskdetail.html', form=form)
+        return render_template('riskdetail.html', form=form, risk=risk)
     else:
     #It is a new risk
 
@@ -76,7 +81,6 @@ def edit_risk(risk_id):
             form.Person.choices = sorted([(person.id,person.last_name + " " + person.first_name) for person in Persons.query.all()])
 
         if form.validate_on_submit():
-            print("Form validated")
             
             # Create a new risk in the database
 
@@ -88,11 +92,10 @@ def edit_risk(risk_id):
                             impact=form.impact.data,
                             person_id=form.Person.data,
                             program_id=form.Program.data,
-                            date=form.date.data,
-                            realizedate=form.realizedate.data,
-                            expiredate=form.expiredate.data
+                            date=parse_date(request.form.get('date')),
+                            realizedate=parse_date(request.form.get('realizedate')),
+                            expiredate=parse_date(request.form.get('expiredate'))
                             )
-            print(newrisk)
             
             db.session.add(newrisk)
             db.session.commit()
@@ -102,7 +105,7 @@ def edit_risk(risk_id):
             #Should only get here if the form did not validate
             print(form.errors)
         
-        return render_template('riskdetail.html', form=form)
+        return render_template('riskdetail.html', form=form, risk=None)
 
 
 def buildrisklist(risks: List[Risks]) -> List[Dict]:

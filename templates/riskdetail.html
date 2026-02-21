@@ -7,7 +7,6 @@
 <body>
     <title>Edit Risk</title>
     <form action="" method="post">
-        {{ form.hidden_tag() }}
         {{ form.ifstatement.label }}<br>
         {{ form.ifstatement(size=80) }}<br>
         
@@ -36,16 +35,17 @@
         {{ form.Person.label }}<br>
         {{ form.Person() }}
         <br>
-        {{ form.date.label }}<br>
-        {{ form.date() }}
+        <label for="date">Date</label>
         <br>
-        {{ form.realizedate.label }}<br>
-        {{ form.realizedate() }}
+        <input type="date" name="date" id="date" value="{{ risk.date.strftime('%Y-%m-%d') if risk and risk.date else '' }}" required><br>
         <br>
-        {{ form.expiredate.label }}<br>
-        {{ form.expiredate() }}
+        <label for="realizedate">Realize Date</label><br>
+        <input type="date" name="realizedate" id="realizedate" value="{{ risk.realizedate.strftime('%Y-%m-%d') if risk and risk.realizedate else '' }}"><br>
         <br>
-        {{ form.submit() }}
+        <label for="expiredate">Expire Date</label><br>
+        <input type="date" name="expiredate" id="expiredate" value="{{ risk.expiredate.strftime('%Y-%m-%d') if risk and risk.expiredate else '' }}"><br>
+        <br>
+        <button type="submit" class="btn btn-primary">Submit</button>
 
     </form>
     <a href="/">Back to Top</a>
