@@ -15,7 +15,6 @@ def parse_date(date_str):
         return None
 
 risks_bp = Blueprint('risks', __name__)
-
 @risks_bp.route('/editrisk/<risk_id>', methods=['GET', 'POST'])
 def edit_risk(risk_id):
     # Find the maximum risk ID in the database

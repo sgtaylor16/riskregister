@@ -48,6 +48,13 @@
         <button type="submit" class="btn btn-primary">Submit</button>
 
     </form>
+    {% if risk %}
+    <br>
+    <form action="/deleterisk/{{ risk.id }}" method="post" onsubmit="return confirm('Are you sure you want to delete this risk?');">
+        <button type="submit" class="btn" style="background-color: pink; border-color: pink; color: black;">Delete Risk</button>
+    </form>
+    {% endif %}
+    <br>
     <a href="/">Back to Top</a>
   
 </body>
