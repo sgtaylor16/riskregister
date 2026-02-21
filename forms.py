@@ -9,6 +9,9 @@ from flask import request
 #        return request.method =="POST" and self.validate()
 
 class RiskForm(FlaskForm):
+    class Meta:
+        csrf = False
+
     ifstatement = StringField('If Statement', validators=[DataRequired()])
     thenstatement = StringField('Then Statement', validators=[DataRequired()])
     probability = RadioField('Probability', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
@@ -16,9 +19,6 @@ class RiskForm(FlaskForm):
     submit = SubmitField('Submit')
     Program = SelectField('Program')
     Person = SelectField('Person')
-    date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
-    realizedate = DateField('Realization Date', format='%Y-%m-%d', validators=[Optional()])
-    expiredate = DateField('Expiration Date', format='%Y-%m-%d', validators=[Optional()])
 
 class ProgramForm(FlaskForm):
     name = StringField('Program Name', validators=[DataRequired()])

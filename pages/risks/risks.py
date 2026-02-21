@@ -7,6 +7,11 @@ from dateutil.parser import parse
 from typing import List, Dict
 from misctools import score
 
+def parse_date(date_str):
+    try:
+        return parse(date_str)
+    except ValueError:
+        return None
 
 risks_bp = Blueprint('risks', __name__)
 
@@ -55,9 +60,9 @@ def edit_risk(risk_id):
             risk.impact = form.impact.data
             risk.program_id = form.Program.data
             risk.person_id = form.Person.data
-            risk.date = form.date.data
-            risk.realizedate = form.realizedate.data
-            risk.expiredate = form.expiredate.data
+            risk.date = parse_date(request.form.get('date'))
+            risk.realizedate = parse_date(request.form.get('realizedate'))
+            risk.expiredate = parse_date(request.form.get('expiredate'))
 
             db.session.commit()
 
@@ -88,11 +93,10 @@ def edit_risk(risk_id):
                             impact=form.impact.data,
                             person_id=form.Person.data,
                             program_id=form.Program.data,
-                            date=form.date.data,
-                            realizedate=form.realizedate.data,
-                            expiredate=form.expiredate.data
+                            date=parse_date(request.form.get('date')),
+                            realizedate=parse_date(request.form.get('realizedate')),
+                            expiredate=parse_date(request.form.get('expiredate'))
                             )
-            print(newrisk)
             
             db.session.add(newrisk)
             db.session.commit()
