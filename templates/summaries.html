@@ -8,7 +8,14 @@
 </head>
 <body>
     <h1>Risk Summaries</h1>
-    <div id="pig"></div>
+    <div id="pig">
+        <svg width="100" height="500">
+            <text x="30" y="250" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90 30 250)" font-size="32">Impact</text>
+        </svg>
+    </div>
+    <svg width="600" height="100">
+        <text x="400" y="50" text-anchor="middle" dominant-baseline="middle" font-size="32">Probability</text>
+    </svg>
     <script type="module">
         import { pigSummary } from '/static/graphics.js';
 
