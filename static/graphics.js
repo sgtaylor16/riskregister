@@ -144,7 +144,7 @@ export function drawriskBox(size,svgselector,prob,impact,mitigationlist,plotcirc
     }
     if(mitigationlist.length > 0){
         mitigationlist.forEach(mitigation => {
-            onecube.plottext(mitigation.probability,mitigation.impact,mitigation.id);
+            onecube.plottext(mitigation.probability,mitigation.impact,mitigation.label);
         })
     }
 }
@@ -189,7 +189,7 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
     let mitdiv = riskrow.append("div").attr("class","mitigations")
     if (mitigationlist.length > 0){
         mitigationlist.forEach(mitigation => {
-            mitdiv.append("p").append("a").attr("href","/editmit/" + mitigation.id).text(mitigation.id)
+            mitdiv.append("p").append("a").attr("href","/editmit/" + mitigation.id).text(mitigation.label)
             mitdiv.append("p").text(mitigation.description)
             mitdiv.append("p").text(mitigation.probability);
             mitdiv.append("p").text(mitigation.impact);

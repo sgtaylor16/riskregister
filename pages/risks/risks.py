@@ -122,8 +122,9 @@ def buildrisklist(risks: List[Risks]) -> List[Dict]:
         newob['person'] = risk.person.last_name + ", " + risk.person.first_name
         newob['score'] = score(risk.probability,risk.impact)
         mitigationlist = []
-        for mitigation in risk.mitigations:
+        for i,mitigation in enumerate(risk.mitigations):
             mitigationlist.append({
+                'label':i+1,
                 'id': mitigation.id,
                 'description': mitigation.description,
                 'probability': mitigation.probability,
