@@ -186,6 +186,20 @@ export function riskRow(element,id,ifstatement,thenstatement,program,prob,impact
 
     let formdiv = riskrow.append("div").attr("class","formdiv")
 
+    let newmit_button = formdiv.append("button")
+    .attr("type","button")
+    .text("+Mitigation")
+    .on("click", function() {
+        window.location.href = "/newmit/" + id;
+    });
+
+    let waterfallbutton = formdiv.append("button")
+        .attr("type","button")
+        .text("Waterfall")
+        .on("click", function() {
+            window.location.href = "/waterfall/" + id;
+        });
+
     let mitdiv = riskrow.append("div").attr("class","mitigations")
     if (mitigationlist.length > 0){
         mitigationlist.forEach(mitigation => {
