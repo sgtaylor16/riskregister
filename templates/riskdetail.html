@@ -50,6 +50,11 @@
     </form>
     {% if risk %}
     <br>
+    <br>
+    <form action="/archiverisk/{{ risk.id }}" method="post" onsubmit="return confirm('Are you sure you want to archive this risk?');">
+        <button type="submit" class="btn" style="background-color: lightblue; border-color: lightblue; color: black;">Archive Risk</button>`
+    </form>
+    <br>
     <form action="/deleterisk/{{ risk.id }}" method="post" onsubmit="return confirm('Are you sure you want to delete this risk?');">
         <button type="submit" class="btn" style="background-color: pink; border-color: pink; color: black;">Delete Risk</button>
     </form>

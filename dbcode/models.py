@@ -28,6 +28,7 @@ class Risks(db.Model):
     date: Mapped[datetime] = Column(DateTime)
     realizedate: Mapped[datetime] = Column(DateTime,nullable=True)
     expiredate: Mapped[datetime] = Column(DateTime,nullable=True)
+    archive: Mapped[int] = Column(Integer,default=0)
 
 class Mitigations(db.Model):
     __tablename__ = 'mitigations'
