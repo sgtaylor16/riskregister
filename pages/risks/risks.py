@@ -146,7 +146,7 @@ def risk_dashboard():
 
     if request.method== 'GET':
         # This route function will be called via fetch when the user accesses the risk dashboard
-        risks = db.session.execute(select(Risks)).scalars().all()
+        risks = db.session.execute(select(Risks).where(Risks.archive == 0)).scalars().all()
         listofrisks = buildrisklist(risks)
     else:
 
@@ -154,10 +154,52 @@ def risk_dashboard():
         newselected_persons = request.get_json()['persons']
         listofrisks = []
 
-        risks =db.session.execute(select(Risks).where(and_(Risks.program_id.in_(newselected_prog),Risks.person_id.in_(newselected_persons)))).scalars().all()
+        risks =db.session.execute(select(Risks).where(and_(Risks.program_id.in_(newselected_prog),Risks.person_id.in_(newselected_persons),Risks.archive == 0))).scalars().all()
         listofrisks = buildrisklist(risks)
     
     return jsonify(listofrisks)
+
+@risks_bp.route('/archiverisk/<risk_id>', methods=['POST'])
+def archive_risk(risk_id):
+    # Get the risk from the database
+    risk = db.session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
+    if risk is None:
+        return "Risk not found", 404
+
+    # Set the archive flag to 1
+    risk.archive= 1
+    db.session.commit()
+
+    return redirect('/dashboard')
+
+@risks_bp.route('/deleterisk/<risk_id>', methods=['POST'])
+def delete_risk(risk_id):
+    # Get the risk from the database
+    risk = db.session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
+    if risk is None:
+        return "Risk not found", 404
+
+    # Delete the risk from the database
+    db.session.delete(risk)
+    db.session.commit()
+
+    # Delete mitigations associated with the risk
+    mitigations = db.session.execute(select(Mitigations).where(Mitigations.risk_id == risk_id)).scalars().all()
+    for mitigation in mitigations:
+        db.session.delete(mitigation)
+    db.session.commit()
+
+    return redirect('/dashboard')
+
+#Archived risks
+@risks_bp.route('/archiveriskdata', methods=['GET'])
+def archived_risk_data():
+    # This route function will be called via fetch when the user accesses the archived risks page
+    risks = db.session.execute(select(Risks).where(Risks.archive == 1)).scalars().all()
+    listofrisks = buildrisklist(risks)
+    return jsonify(listofrisks)
+
+#Mitigations routes
 
 @risks_bp.route('/editmit/<mitigation_id>', methods=['GET', 'POST'])
 def edit_mitigation(mitigation_id):
@@ -213,21 +255,3 @@ def new_mitigation(risk_id):
 
     return render_template('newmitigation.html')
 
-@risks_bp.route('/deleterisk/<risk_id>', methods=['POST'])
-def delete_risk(risk_id):
-    # Get the risk from the database
-    risk = db.session.execute(select(Risks).where(Risks.id == risk_id)).scalar_one_or_none()
-    if risk is None:
-        return "Risk not found", 404
-
-    # Delete the risk from the database
-    db.session.delete(risk)
-    db.session.commit()
-
-    # Delete mitigations associated with the risk
-    mitigations = db.session.execute(select(Mitigations).where(Mitigations.risk_id == risk_id)).scalars().all()
-    for mitigation in mitigations:
-        db.session.delete(mitigation)
-    db.session.commit()
-
-    return redirect('/dashboard')
