@@ -30,3 +30,7 @@ def dashboard():
 
         
     return render_template("dashboard.html", riskbutton=newriskform, selected_programs=selected_programs,selected_persons=selected_persons)
+
+@index_bp.route('/archived',methods=['GET'])
+def archive():
+    return render_template("archived.html")

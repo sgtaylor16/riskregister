@@ -191,6 +191,14 @@ def delete_risk(risk_id):
 
     return redirect('/dashboard')
 
+#Archived risks
+@risks_bp.route('/archiveriskdata', methods=['GET'])
+def archived_risk_data():
+    # This route function will be called via fetch when the user accesses the archived risks page
+    risks = db.session.execute(select(Risks).where(Risks.archive == 1)).scalars().all()
+    listofrisks = buildrisklist(risks)
+    return jsonify(listofrisks)
+
 #Mitigations routes
 
 @risks_bp.route('/editmit/<mitigation_id>', methods=['GET', 'POST'])
