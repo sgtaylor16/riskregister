@@ -1,6 +1,9 @@
 from dbcode.models import Risks
 from typing import Dict
 from datetime import datetime
+import sqlite3
+import pandas as pd
+from io import BytesIO
 
 def score(prob:int,imp:int) -> int:
     """
@@ -53,3 +56,23 @@ def currentriskstatus(risk:Risks,date:datetime) -> Dict[str,int]:
 def currentriskscore(risk:Risks,date:datetime) -> int:
     riskstatus = currentriskstatus(risk,date)
     return score(riskstatus["probability"],riskstatus["impact"])
+
+def createSpreadsheet(output_path: str):
+    if output_path and not output_path.endswith('.xlsx'):
+        raise ValueError("Output path must end with .xlsx")
+    with sqlite3.connect('dbcode/riskregister.db') as conn:
+        risksdf = pd.read_sql_query("""SELECT id, ifstatement,thenstatement,probability,impact, date FROM risks
+                               WHERE archive = 0""", conn)
+        
+        risksdf['Score'] = risksdf.apply(lambda row: score(row['probability'], row['impact']), axis=1)
+        
+        mitigationsdf = pd.read_sql_query("""SELECT description,probability mitigation_probability,impact mitigation_risk,risk_id,date mitigation_date,complete 
+                                         FROM mitigations""",conn)
+        
+        mitigationsdf['Score'] = mitigationsdf.apply(lambda row: score(row['mitigation_probability'], row['mitigation_risk']), axis=1)   
+        
+    with pd.ExcelWriter(output_path, engine='xlsxwriter') as writer:
+        risksdf.to_excel(writer, sheet_name='Risks', index=False)
+        mitigationsdf.to_excel(writer, sheet_name='Mitigations', index=False)
+
+    return None
