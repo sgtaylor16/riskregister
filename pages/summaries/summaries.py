@@ -10,15 +10,22 @@ summary_bp = Blueprint('summary', __name__)
 
 @summary_bp.route('/pigdata')
 def pigcount():
-
+    """Returns a json array of the following format:
+    {1: {1: count, 2: count, 3: count, 4: count, 5: count},
+     2: {1: count, 2: count, 3: count, 4: count, 5: count},
+     3: {1: count, 2: count, 3: count, 4: count, 5: count},
+     4: {1: count, 2: count, 3: count, 4: count, 5: count},
+     5: {1: count, 2: count, 3: count, 4: count, 5: count}}
+        where the first key is the probability and the second key is the impact
+          and the value is the count of risks with that probability and impact."""
     allrisks = db.session.execute(select(Risks).where(Risks.archive == 0)).scalars().all()
 
     countdf = pd.DataFrame(0,columns = [1,2,3,4,5],index = [1,2,3,4,5])
 
     for risk in allrisks:
         countdf.loc[risk.probability,risk.impact] += 1
-
-    return countdf.to_json()
+    
+    return countdf.T.to_json()
 
 @summary_bp.route('/summary')
 def summary():
