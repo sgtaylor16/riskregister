@@ -4,6 +4,7 @@ from extensions import db
 import pandas as pd
 from sqlalchemy import select
 from misctools import score
+from datetime import datetime
 
 
 summary_bp = Blueprint('summary', __name__)
@@ -18,7 +19,17 @@ def pigcount():
      5: {1: count, 2: count, 3: count, 4: count, 5: count}}
         where the first key is the probability and the second key is the impact
           and the value is the count of risks with that probability and impact."""
-    allrisks = db.session.execute(select(Risks).where(Risks.archive == 0)).scalars().all()
+    request_date = request.args.get('date')
+
+    query = select(Risks).where(Risks.archive == 0)
+    if request_date:
+        try:
+            as_of_date = datetime.strptime(request_date, "%Y-%m-%d")
+            query = query.where(Risks.date <= as_of_date)
+        except ValueError:
+            return jsonify({'error': 'Invalid date format. Use YYYY-MM-DD.'}), 400
+
+    allrisks = db.session.execute(query).scalars().all()
 
     countdf = pd.DataFrame(0,columns = [1,2,3,4,5],index = [1,2,3,4,5])
 
