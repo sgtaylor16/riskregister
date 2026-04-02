@@ -8,6 +8,11 @@
 </head>
 <body>
     <h1>Risk Summaries</h1>
+    <form id="summary-date-form">
+        <label for="as-of-date">As of date:</label>
+        <input type="date" id="as-of-date" name="date">
+        <button type="submit">Apply</button>
+    </form>
     <div id="pig">
         <svg width="100" height="500">
             <text x="30" y="250" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90 30 250)" font-size="32">Impact</text>
@@ -19,12 +24,32 @@
     <script type="module">
         import { pigSummary } from '/static/graphics.js';
 
-        fetch('/pigdata')
-            .then(response => response.json())
-            .then(data => {
-                pigSummary(500,"#pig",data)
-                
-            })
+        const dateForm = document.getElementById('summary-date-form');
+        const dateInput = document.getElementById('as-of-date');
+        const pigContainer = document.getElementById('pig');
+
+        function loadPigData(selectedDate = '') {
+            let url = '/pigdata';
+            if (selectedDate) {
+                const params = new URLSearchParams({ date: selectedDate });
+                url = `${url}?${params.toString()}`;
+            }
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Clear the previous matrix before drawing the refreshed one.
+                    pigContainer.querySelectorAll('svg:not(:first-child)').forEach(el => el.remove());
+                    pigSummary(500, "#pig", data)
+                });
+        }
+
+        dateForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            loadPigData(dateInput.value);
+        });
+
+        loadPigData();
     </script>
 </body>
 </html>
